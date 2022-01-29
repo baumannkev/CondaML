@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 from sklearn.ensemble import RandomForestClassifier
@@ -8,11 +8,14 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 future_time = 1
 size_window = 1
 from numpy import mean
+import seaborn as sns
 from numpy import std
 from sklearn.datasets import make_regression
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RepeatedKFold
 from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.model_selection import train_test_split
+import time
 
 #---------------------------------#
 # Page layout
@@ -101,6 +104,18 @@ st.write(penguins_species[prediction])
 st.subheader('Prediction Probability')
 st.write(prediction_proba)
 
+# Testing Sirine's Model 
+
+def plot_predictions(test, predicted, title):
+    plt.figure(figsize=(32,8))
+    plt.plot(test, color='blue',label='Actual Supply Air Temperature')
+    plt.plot(predicted, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
+    plt.title(title)
+    plt.xlabel('Time')
+    plt.ylabel('Temperature')
+    plt.legend()
+    plt.show()
+
 st.write("""
 # BCIT Room Temperature Prediction App
 
@@ -130,3 +145,141 @@ df.isnull().sum()
 corrmat = df.corr()
 f, ax = plt.subplots(figsize=(12, 9))
 sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+st.write(f)
+
+st.write(
+    """
+### Based on the Heat map:
+* SF_SPD is 100% correlated to EF_SFD *Return Air Temperature (RAT) and Mixed Air temp (MAT) are highly corrolated and that makes sense.
+    """
+)
+
+df= df.drop(['NE01_AHU7_EF_SPD_POLL_TL'],axis=1)
+df = df.drop(['NE01_AHU7_RAT_POLL_TL'],axis=1)
+
+from matplotlib import pyplot
+df_testtest=df[:int(len(df)/50)]
+values = df_testtest.values
+# specify columns to plot
+groups = [0, 1, 2, 3, 5, 6, 7,8]
+i = 1
+# plot each column
+pyplot.figure(figsize=(10, 15), dpi=80)
+
+# for group in groups:
+#     pyplot.subplot(len(groups), 1, i)
+#     pyplot.plot(values[:, group])
+#     pyplot.title(df_testtest.columns[group], y=0.5, loc='right')
+#     i += 1
+# pyplot.show()
+# st.write(
+#     pyplot.show()
+# )
+
+# df.to_csv(r'Pre_processed2016_2019.csv')
+df['Weekend']=(df.index.dayofweek // 5 == 1).astype(float)
+df['Day']=((6<=df.index.hour) & (df.index.hour <=18))
+df['Before_night']=((19<=df.index.hour) & (df.index.hour <=22))
+df['night']=((df.index.hour>=23) & (df.index.hour <=5))
+df['month'] = df.index.month
+
+# df.to_csv(r'Pre_processed2016_2019_new.csv')
+df = pd.get_dummies(df, columns=['month'])
+df.describe()
+temp = df["NE01_AHU7_HC_SAT_POLL_TL"].where((df.Day == 1) & (df.Weekend == 0.0) & (df.month_2 == 1)).count()
+
+# Timer starts
+starttime = time.time()
+lasttime = starttime
+lapnum = 1
+value = ""
+st.write("""
+    ## Training..
+""")
+#use all data previous to 2019 for training and validation
+df_train = df[(df.index.year < 2019)]
+df_train.shape
+
+#reserve the last year for testing
+df_test = df[(df.index.year >= 2019)]
+df_test.shape
+
+import copy
+import numpy as np
+X = []
+y = []
+tmp_ret = []
+i = 0
+while i < len(df_train):
+    row = df_train.iloc[i]
+    if len(tmp_ret) == size_window:
+        if i + (future_time - 1) < len(df_train):
+            X.append(np.array(copy.deepcopy(tmp_ret)))
+            y.append(df_train.iloc[i+(future_time - 1)]['NE01_AHU7_HC_SAT_POLL_TL'])
+    tmp_ret.append(copy.deepcopy(row.to_list()))
+    if len(tmp_ret) == size_window + 1:
+        tmp_ret.pop(0)
+    i += 1
+
+X = np.array(X)
+y = np.array(y)
+X.shape
+
+X_train,X_val,y_train,y_val = train_test_split(X,y,test_size=0.2,shuffle=True, random_state=42)
+X_test = []
+y_test = []
+tmp_ret = []
+i = 0
+while i < len(df_test):
+    row = df_test.iloc[i]
+    if len(tmp_ret) == size_window:
+        if i + (future_time - 1) < len(df_test):
+            X_test.append(np.array(copy.deepcopy(tmp_ret)))
+            y_test.append(df_test.iloc[i+(future_time - 1)]['NE01_AHU7_HC_SAT_POLL_TL'])
+    tmp_ret.append(copy.deepcopy(row.to_list()))
+    if len(tmp_ret) == size_window + 1:
+        tmp_ret.pop(0)
+    i += 1
+
+X_test = np.array(X_test)
+y_test = np.array(y_test)
+
+y_test.shape
+
+X_train.shape
+
+X_val.shape
+st.write("""
+    ## Done Training
+""")
+# Total time elapsed since the timer started
+totaltime = round((time.time() - starttime), 2)
+st.write("Time taken = " + str(totaltime) + " seconds")
+
+st.write("""
+    ## Model 1: Extra Trees for Regression
+""")
+
+#################################### Model 1: Extra Trees for Regression #################################### 
+from numpy import mean
+from numpy import std
+from sklearn.datasets import make_regression
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedKFold
+from sklearn.ensemble import ExtraTreesRegressor
+# define the model
+model_Extra = ExtraTreesRegressor()
+#fit the model on train data
+model_Extra.fit(X_train.reshape(X_train.shape[0],-1), y_train)
+
+pred_tree_val = model_Extra.predict(X_val.reshape(X_val.shape[0],-1))
+st.write(pred_tree_val)
+st.write ('Mean Squared Error on Val Set = ', mean_squared_error(y_val,pred_tree_val))
+st.write ('Mean Absolute Error on Val Set = ', mean_absolute_error(y_val,pred_tree_val))
+pred_tree_test = model_Extra.predict(X_test.reshape(X_test.shape[0],-1))
+st.write(pred_tree_test)
+st.write ('Mean Squared Error on Test Set = ', mean_squared_error(y_test,pred_tree_test))
+st.write ('Mean Absolute Error on Test Set = ', mean_absolute_error(y_test,pred_tree_test))
+
+plot_predictions(y_test, pred_tree_test, "Predictions made by ExtraTree model")
+
