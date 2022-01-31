@@ -4,7 +4,7 @@ import copy
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.datasets import load_diabetes, load_boston
 future_time = 1
 size_window = 1
@@ -35,7 +35,7 @@ def build_model(df):
 
     df = df.resample('15min', on='Timestamp').mean()
 
-    st.write(df['NE01_AHU7_RESET_POLL_TL'].sum())
+    # st.write(df['NE01_AHU7_RESET_POLL_TL'].sum())
 
     df.isnull().sum()
 
@@ -55,14 +55,14 @@ def build_model(df):
     df['month'] = df.index.month
     df = pd.get_dummies(df, columns=['month'])
     temp = df["NE01_AHU7_HC_SAT_POLL_TL"].where((df.Day == 1) & (df.Weekend == 0.0) & (df.month_2 == 1)).count()
-    
+    st.write(df.head(5))
     #use all data previous to 2019 for training and validation
     df_train = df[(df.index.year < 2019)]
-    df_train.shape  
+    # df_train.shape  
 
     #reserve the last year for testing
     df_test = df[(df.index.year >= 2019)]
-    df_test.shape
+    # df_test.shape
 
     X = []
     Y = []
@@ -118,7 +118,7 @@ def build_model(df):
 
     etr = ExtraTreesRegressor(n_estimators=parameter_n_estimators,
         random_state=parameter_random_state,
-        max_depth=parameter_max_features,
+        max_features=parameter_max_features,
         criterion=parameter_criterion,
         min_samples_split=parameter_min_samples_split,
         min_samples_leaf=parameter_min_samples_leaf,
@@ -130,23 +130,38 @@ def build_model(df):
     st.subheader('2. Model Performance')
 
     st.markdown('**2.1. Training set**')
-    Y_pred_train = etr.predict(X_train)
+    
+    pred_tree_val = etr.predict(X_val.reshape(X_val.shape[0],-1))
+    # Y_pred_train = etr.predict(X_train)
+    
     # st.write('Coefficient of determination ($R^2$):')
     # st.info( r2_score(Y_train, Y_pred_train) )
 
     st.write('Error (MSE or MAE):')
-    st.info( mean_squared_error(Y_train, Y_pred_train) )
+    st.write('MSE:')
+    st.info(mean_squared_error(y_val,pred_tree_val))
+    st.write('MAE:')
+    st.info(mean_absolute_error(y_val,pred_tree_val))
 
     st.markdown('**2.2. Test set**')
-    Y_pred_test = etr.predict(X_test)
+    pred_tree_test = etr.predict(X_test.reshape(X_test.shape[0],-1))
+
+    # Y_pred_test = etr.predict(X_test)
     # st.write('Coefficient of determination ($R^2$):')
     # st.info( r2_score(Y_test, Y_pred_test) )
 
     st.write('Error (MSE or MAE):')
-    st.info( mean_squared_error(Y_test, Y_pred_test) )
+    st.write('MSE:')
+    st.info(mean_squared_error(Y_test,pred_tree_test))
+    st.write('MAE:')
+    st.info(mean_absolute_error(Y_test,pred_tree_test))
+
+    # st.info( mean_squared_error(Y_test, Y_pred_test) )
 
     st.subheader('3. Model Parameters')
     st.write(etr.get_params())
+
+    st.line_chart()
 
 #---------------------------------#
 st.write("""
@@ -189,8 +204,16 @@ st.subheader('1. Dataset')
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file, parse_dates=True)
     st.markdown('**1.1. Glimpse of dataset**')
-    st.write(df)
+    # Timer starts
+    starttime = time.time()
+    lasttime = starttime
+    lapnum = 1
+    value = ""
+    st.write(df.head(5))
     build_model(df)
+    # Total time elapsed since the timer started
+    totaltime = round((time.time() - starttime), 2)
+    st.write("Time taken = " + str(totaltime) + " seconds")
 else:
     st.info('Awaiting for CSV file to be uploaded.')
     if st.button('Press to use Example Dataset'):
