@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 from sklearn.ensemble import RandomForestClassifier
@@ -8,7 +7,6 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 future_time = 1
 size_window = 1
 from numpy import mean
-import seaborn as sns
 from numpy import std
 from sklearn.datasets import make_regression
 from sklearn.model_selection import cross_val_score
@@ -16,7 +14,8 @@ from sklearn.model_selection import RepeatedKFold
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.model_selection import train_test_split
 import time
-
+# import matplotlib as plt
+# import seaborn as sns
 #---------------------------------#
 # Page layout
 ## Page expands to full width
@@ -65,56 +64,18 @@ else:
         return features
     input_df = user_input_features()
 
-# Combines user input features with entire penguins dataset
-# This will be useful for the encoding phase
-penguins_raw = pd.read_csv('penguins_cleaned.csv')
-penguins = penguins_raw.drop(columns=['species'])
-df = pd.concat([input_df,penguins],axis=0)
-
-# Encoding of ordinal features
-# https://www.kaggle.com/pratik1120/penguin-dataset-eda-classification-and-clustering
-encode = ['sex','island']
-for col in encode:
-    dummy = pd.get_dummies(df[col], prefix=col)
-    df = pd.concat([df,dummy], axis=1)
-    del df[col]
-df = df[:1] # Selects only the first row (the user input data)
-
-# Displays the user input features
-st.subheader('User Inputs features')
-
-if uploaded_file is not None:
-    st.write(df)
-else:
-    st.write('Awaiting CSV file to be uploaded. Currently using example input parameters (shown below).')
-    st.write(df)
-
-# Reads in saved classification model
-load_clf = pickle.load(open('penguins_clf.pkl', 'rb'))
-
-# Apply model to make predictions
-prediction = load_clf.predict(df)
-prediction_proba = load_clf.predict_proba(df)
-
-
-st.subheader('Prediction')
-penguins_species = np.array(['Adelie','Chinstrap','Gentoo'])
-st.write(penguins_species[prediction])
-
-st.subheader('Prediction Probability')
-st.write(prediction_proba)
 
 # Testing Sirine's Model 
 
-def plot_predictions(test, predicted, title):
-    plt.figure(figsize=(32,8))
-    plt.plot(test, color='blue',label='Actual Supply Air Temperature')
-    plt.plot(predicted, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
-    plt.title(title)
-    plt.xlabel('Time')
-    plt.ylabel('Temperature')
-    plt.legend()
-    plt.show()
+# def plot_predictions(test, predicted, title):
+#     plt.figure(figsize=(32,8))
+#     plt.plot(test, color='blue',label='Actual Supply Air Temperature')
+#     plt.plot(predicted, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
+#     plt.title(title)
+#     plt.xlabel('Time')
+#     plt.ylabel('Temperature')
+#     plt.legend()
+#     plt.show()
 
 st.write("""
 # BCIT Room Temperature Prediction App
@@ -143,38 +104,9 @@ df = df.dropna()
 df.isnull().sum()
 
 corrmat = df.corr()
-f, ax = plt.subplots(figsize=(12, 9))
-sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
-st.write(f)
-
-st.write(
-    """
-### Based on the Heat map:
-* SF_SPD is 100% correlated to EF_SFD *Return Air Temperature (RAT) and Mixed Air temp (MAT) are highly corrolated and that makes sense.
-    """
-)
 
 df= df.drop(['NE01_AHU7_EF_SPD_POLL_TL'],axis=1)
 df = df.drop(['NE01_AHU7_RAT_POLL_TL'],axis=1)
-
-from matplotlib import pyplot
-df_testtest=df[:int(len(df)/50)]
-values = df_testtest.values
-# specify columns to plot
-groups = [0, 1, 2, 3, 5, 6, 7,8]
-i = 1
-# plot each column
-pyplot.figure(figsize=(10, 15), dpi=80)
-
-# for group in groups:
-#     pyplot.subplot(len(groups), 1, i)
-#     pyplot.plot(values[:, group])
-#     pyplot.title(df_testtest.columns[group], y=0.5, loc='right')
-#     i += 1
-# pyplot.show()
-# st.write(
-#     pyplot.show()
-# )
 
 # df.to_csv(r'Pre_processed2016_2019.csv')
 df['Weekend']=(df.index.dayofweek // 5 == 1).astype(float)
@@ -281,5 +213,5 @@ st.write(pred_tree_test)
 st.write ('Mean Squared Error on Test Set = ', mean_squared_error(y_test,pred_tree_test))
 st.write ('Mean Absolute Error on Test Set = ', mean_absolute_error(y_test,pred_tree_test))
 
-plot_predictions(y_test, pred_tree_test, "Predictions made by ExtraTree model")
+# plot_predictions(y_test, pred_tree_test, "Predictions made by ExtraTree model")
 
