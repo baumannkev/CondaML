@@ -30,11 +30,11 @@ def build_model(df):
 
     df = df.drop(['NE01_AHU7_EFS_POLL_TL','NE01_AHU7_SAT_POLL_TL', 'NE01_AHU7_EF_VFD_AL_COV_TL','NE01_AHU7_BSP_POLL_TL', 'NE01_AHU7_WEST_DSP_POLL_TL',
     'NE01_AHU7_EAST_DSP_POLL_TL'],axis=1)
-
+    st.write(df.head(5))
     df['Timestamp']=pd.to_datetime(df['Timestamp'])
-
+    
     df = df.resample('15min', on='Timestamp').mean()
-
+    
     # st.write(df['NE01_AHU7_RESET_POLL_TL'].sum())
 
     df.isnull().sum()
@@ -55,7 +55,7 @@ def build_model(df):
     df['month'] = df.index.month
     df = pd.get_dummies(df, columns=['month'])
     temp = df["NE01_AHU7_HC_SAT_POLL_TL"].where((df.Day == 1) & (df.Weekend == 0.0) & (df.month_2 == 1)).count()
-    st.write(df.head(5))
+    # st.write(df.head(5))
     #use all data previous to 2019 for training and validation
     df_train = df[(df.index.year < 2019)]
     # df_train.shape  
@@ -161,7 +161,6 @@ def build_model(df):
     st.subheader('3. Model Parameters')
     st.write(etr.get_params())
 
-    st.line_chart()
 
 #---------------------------------#
 st.write("""
@@ -174,10 +173,7 @@ Try adjusting the hyperparameters!
 # Sidebar - Collects user input features into dataframe
 with st.sidebar.header('1. Upload your CSV data'):
     uploaded_file = st.sidebar.file_uploader("Upload your input CSV file", type=["csv"])
-    st.sidebar.markdown("""
-[Example CSV input file](https://raw.githubusercontent.com/dataprofessor/data/master/delaney_solubility_with_descriptors.csv)
-""")
-
+    
 # Sidebar - Specify parameter settings
 with st.sidebar.header('2. Set Parameters'):
     split_size = st.sidebar.slider('Data split ratio (% for Training Set)', 10, 90, 80, 5)
@@ -209,7 +205,7 @@ if uploaded_file is not None:
     lasttime = starttime
     lapnum = 1
     value = ""
-    st.write(df.head(5))
+    # st.write(df.head(5))
     build_model(df)
     # Total time elapsed since the timer started
     totaltime = round((time.time() - starttime), 2)
