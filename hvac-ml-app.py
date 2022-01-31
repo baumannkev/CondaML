@@ -208,6 +208,7 @@ pred_tree_val = model_Extra.predict(X_val.reshape(X_val.shape[0],-1))
 st.write(pred_tree_val)
 st.write ('Mean Squared Error on Val Set = ', mean_squared_error(y_val,pred_tree_val))
 st.write ('Mean Absolute Error on Val Set = ', mean_absolute_error(y_val,pred_tree_val))
+
 pred_tree_test = model_Extra.predict(X_test.reshape(X_test.shape[0],-1))
 st.write(pred_tree_test)
 st.write ('Mean Squared Error on Test Set = ', mean_squared_error(y_test,pred_tree_test))
