@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import copy
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
@@ -23,6 +24,17 @@ st.set_page_config(page_title='The Machine Learning App',
     layout='wide')
 
 #---------------------------------#
+
+def plot_predictions(test, predicted, title):
+    plt.figure(figsize=(32,8))
+    plt.plot(test, color='blue',label='Actual Supply Air Temperature')
+    plt.plot(predicted, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
+    plt.title(title)
+    plt.xlabel('Time')
+    plt.ylabel('Temperature')
+    plt.legend()
+    plt.show()
+
 # Model building
 def build_model(df):
     # X = df.iloc[:,:-1] # Using all column except for the last column as X
@@ -161,6 +173,22 @@ def build_model(df):
     st.subheader('3. Model Parameters')
     st.write(etr.get_params())
 
+    # def plot_predictions(test, predicted, title):
+    # plt.figure(figsize=(32,8))
+    # plt.plot(test, color='blue',label='Actual Supply Air Temperature')
+    # plt.plot(predicted, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
+    # plt.title(title)
+    # plt.xlabel('Time')
+    # plt.ylabel('Temperature')
+    # plt.legend()
+    # plt.show()
+
+    fig = plt.figure(figsize=(32,8))
+    plt.streamplot(Y_test, pred_tree_test)
+
+    plt.show()
+    # st.plt.plot(pred_tree_test, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
+    # st.line_chart(Y_test, pred_tree_test)
 
 #---------------------------------#
 st.write("""
