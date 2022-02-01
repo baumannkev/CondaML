@@ -24,16 +24,16 @@ st.set_page_config(page_title='The Machine Learning App',
     layout='wide')
 
 #---------------------------------#
-
 def plot_predictions(test, predicted, title):
-    plt.figure(figsize=(32,8))
-    plt.plot(test, color='blue',label='Actual Supply Air Temperature')
-    plt.plot(predicted, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
+    fig = plt.figure(figsize=(32, 8))
     plt.title(title)
+    plt.plot(test, color='blue',label='Actual Supply Air Temperature')
+    plt.plot(predicted, color='red',label='Predicted Supply Air Temperature')
     plt.xlabel('Time')
     plt.ylabel('Temperature')
     plt.legend()
-    plt.show()
+    st.balloons()
+    st.pyplot(fig)
 
 # Model building
 def build_model(df):
@@ -115,7 +115,6 @@ def build_model(df):
     X_test = np.array(X_test)
     Y_test = np.array(Y_test)
 
-
     st.markdown('**1.2. Data splits**')
     st.write('Training set')
     st.info(X_train.shape)
@@ -182,18 +181,12 @@ def build_model(df):
     # plt.ylabel('Temperature')
     # plt.legend()
     # plt.show()
-
-    fig = plt.figure(figsize=(32,8))
-    plt.streamplot(Y_test, pred_tree_test)
-
-    plt.show()
-    # st.plt.plot(pred_tree_test, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
-    # st.line_chart(Y_test, pred_tree_test)
+    plot_predictions(Y_test, pred_tree_test, "Predictions made by ExtraTree model")
 
 #---------------------------------#
 st.write("""
 # BCIT HVAC Machine Learning Model Builder
-In this implementation, the *ExtraTreesRegressor()* function is used in this app for build a regression model using the **Random Forest** algorithm.
+In this implementation, the *ExtraTreesRegressor()* function is used in this app for build a regression model using the **Extra Tree Regression** algorithm.
 Try adjusting the hyperparameters!
 """)
 
@@ -240,7 +233,7 @@ if uploaded_file is not None:
     st.write("Time taken = " + str(totaltime) + " seconds")
 else:
     st.info('Awaiting for CSV file to be uploaded.')
-    if st.button('Press to use Example Dataset'):
+    # if st.button('Press to use Example Dataset'):
         # Diabetes dataset
         #diabetes = load_diabetes()
         #X = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
@@ -251,12 +244,12 @@ else:
         #st.write(df.head(5))
 
         # Boston housing dataset
-        boston = load_boston()
-        X = pd.DataFrame(boston.data, columns=boston.feature_names)
-        Y = pd.Series(boston.target, name='response')
-        df = pd.concat( [X,Y], axis=1 )
+        # boston = load_boston()
+        # X = pd.DataFrame(boston.data, columns=boston.feature_names)
+        # Y = pd.Series(boston.target, name='response')
+        # df = pd.concat( [X,Y], axis=1 )
 
-        st.markdown('The Boston housing dataset is used as the example.')
-        st.write(df.head(5))
+        # st.markdown('The Boston housing dataset is used as the example.')
+        # st.write(df.head(5))
 
-        build_model(df)
+        # build_model(df)
