@@ -4,13 +4,12 @@ import home
 from multiapp import MultiApp
 import hvacmodelbuilding # import your app modules here
 import multioutputregressor
+
 app = MultiApp()
 
 st.markdown("""
 # BCIT HVAC Machine Learning App
 """)
-primary_clr = st.get_option("theme.primaryColor")
-txt_clr = st.get_option("theme.textColor")
 # I want 3 colours to graph, so this is a red that matches the theme:
 # primary_clr = st.get_option("theme.primaryColor")
 # Add all your application here
