@@ -4,16 +4,9 @@ import copy
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-from sklearn.datasets import load_diabetes, load_boston
 future_time = 1
 size_window = 1
-from numpy import mean
-from numpy import std
-from sklearn.datasets import make_regression
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import RepeatedKFold
 from sklearn.ensemble import ExtraTreesRegressor
 import time
 
