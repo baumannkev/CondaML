@@ -19,7 +19,7 @@ import time
 #---------------------------------#
 # Page layout
 ## Page expands to full width
-
+st.set_page_config(layout='wide')
 def app():
     st.write("""
     # BCIT Room Temperature Prediction App
