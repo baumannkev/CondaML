@@ -115,24 +115,24 @@ def app():
 
             # col11.metric("Outside Air Temperature (°C)", "19.1146049%", "4%")
 
-        if st.button('Predict'):
-            [prediction] = pipeline.predict([[
-                cool_coil_valve,
-                hot_water_valve,
-                hot_water_supply_temp,
-                hot_water_return_temp,
-                dampers_pos,
-                supply_air_temp,
-                mixed_air_temp,
-                return_air_temp,
-                supply_fan_speed,
-                return_fan_speed,
-                outside_air_temp
-            ]])
+        # if st.button('Predict'):
+        [prediction] = pipeline.predict([[
+            cool_coil_valve,
+            hot_water_valve,
+            hot_water_supply_temp,
+            hot_water_return_temp,
+            dampers_pos,
+            supply_air_temp,
+            mixed_air_temp,
+            return_air_temp,
+            supply_fan_speed,
+            return_fan_speed,
+            outside_air_temp
+        ]])
 
-            for i in range(0, len(prediction)):
-                column_name = df['columns'][1][i][1]
-                st.info(f'{column_name} -> {prediction[i]} °C')
+        for i in range(0, len(prediction)):
+            column_name = df['columns'][1][i][1]
+            st.info(f'{column_name} -> {prediction[i]} °C')
 
              
 
