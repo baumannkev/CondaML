@@ -13,7 +13,6 @@ from sklearn.model_selection import train_test_split
 future_time = 1
 size_window = 1
 
-
 def app():
 
     #---------------------------------#
@@ -97,24 +96,6 @@ def app():
         # Prediction Example
         st.markdown('**2.2. Prediction Example**')
 
-    
-               # st.info("Inputs")
-            # col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11 = st.columns(
-            #     11)
-            # col1.metric("Cooling Coil Valve (% open)", "37.6130981 %", "1.2 °F")
-            #col2.metric("Hot Water Valve (% open)", "0.0 %", "-8%")
-            # col3.metric("Hot Water Supply Temperature (°C)", "19.9593983 °C", "4%")
-            # col4.metric("Hot Water Return Temperature (°C)", "20.8191605 °C", "4%")
-            #col5.metric("Dampers Position (% open)", "20.4688644 %", "4%")
-            # col6.metric("Supply Air Temperature (°C)", "19.946228 °C", "4%")
-            # col7.metric("Mixed Air Temperature (°C)", "20.8940868 °C", "4%")
-            # col8.metric("Return Air Temperature (°C)", "21.5931683 °C", "4%")
-            # col9.metric("Supply Fan Speed (% of max speed)", "65.0570679 °C", "4%")
-
-            # col10.metric("Return Fan Speed (% of max speed)", "53.0570641 %", "4%")
-
-            # col11.metric("Outside Air Temperature (°C)", "19.1146049%", "4%")
-
         # if st.button('Predict'):
         [prediction] = pipeline.predict([[
             cool_coil_valve,
@@ -133,8 +114,6 @@ def app():
         for i in range(0, len(prediction)):
             column_name = df['columns'][1][i][1]
             st.info(f'{column_name} -> {prediction[i]} °C')
-
-             
 
     #---------------------------------#
     st.write("""
@@ -185,31 +164,8 @@ def app():
         outside_air_temp = st.sidebar.slider(
             'Outside Air Temperature (°C)', 0.0, 100.0, 19.1146049)  # 11
 
-        # parameter_n_estimators = st.sidebar.slider(
-        #     'Number of estimators (n_estimators)', 0, 1000, 100, 100)
-        # parameter_max_features = st.sidebar.select_slider(
-        #     'Max features (max_features)', options=['auto', 'sqrt', 'log2'])
-        # parameter_min_samples_split = st.sidebar.slider(
-        #     'Minimum number of samples required to split an internal node (min_samples_split)', 1, 10, 2, 1)
-        # parameter_min_samples_leaf = st.sidebar.slider(
-        #     'Minimum number of samples required to be at a leaf node (min_samples_leaf)', 1, 10, 2, 1)
-
-    # with st.sidebar.subheader('2.2. General Parameters'):
-    #     parameter_random_state = st.sidebar.slider(
-    #         'Seed number (random_state)', 0, 1000, 42, 1)
-    #     parameter_criterion = st.sidebar.selectbox(
-    #         'Performance measure (criterion)', options=['mse', 'mae'])
-    #     parameter_bootstrap = st.sidebar.selectbox(
-    #         'Bootstrap samples when building trees (bootstrap)', options=[True, False])
-    #     parameter_oob_score = st.sidebar.selectbox(
-    #         'Whether to use out-of-bag samples to estimate the R^2 on unseen data (oob_score)', options=[False, True])
-    #     parameter_n_jobs = st.sidebar.selectbox(
-    #         'Number of jobs to run in parallel (n_jobs)', options=[1, -1])
-
     #---------------------------------#
     # Main panel
-
-    
 
     # Displays the dataset
     st.subheader('1. Dataset')

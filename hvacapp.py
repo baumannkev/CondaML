@@ -1,5 +1,5 @@
 import streamlit as st
-import hvacmlapp
+import hvacpredictor
 import home
 from multiapp import MultiApp
 import hvacmodelbuilding # import your app modules here
@@ -16,9 +16,7 @@ st.markdown("""
 """)
 # Add all your application here
 app.add_app("Home", home.app)
-app.add_app("Machine Learning App", hvacmlapp.app)
-app.add_app("Machine Learning Model Builder", hvacmodelbuilding.app)
-app.add_app("Multioutput Regressor Model", multioutputregressor.app)
 app.add_app("Model Maker", modelmaker.app)
+app.add_app("HVAC Predictor", hvacpredictor.app)
 # The main app
 app.run()

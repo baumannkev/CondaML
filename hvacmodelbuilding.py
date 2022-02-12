@@ -28,8 +28,7 @@ def app():
 
     # Model building
     def build_model(df):
-        # X = df.iloc[:,:-1] # Using all column except for the last column as X
-        # Y = df.iloc[:,-1] # Selecting the last column as Y
+       
 
         df = df.drop(['NE01_AHU7_EFS_POLL_TL','NE01_AHU7_SAT_POLL_TL', 'NE01_AHU7_EF_VFD_AL_COV_TL','NE01_AHU7_BSP_POLL_TL', 'NE01_AHU7_WEST_DSP_POLL_TL',
         'NE01_AHU7_EAST_DSP_POLL_TL'],axis=1)
@@ -134,10 +133,8 @@ def app():
         st.markdown('**2.1. Training set**')
         
         pred_tree_val = etr.predict(X_val.reshape(X_val.shape[0],-1))
-        # Y_pred_train = etr.predict(X_train)
-        
-        # st.write('Coefficient of determination ($R^2$):')
-        # st.info( r2_score(Y_train, Y_pred_train) )
+     
+    
 
         st.write('Error (MSE or MAE):')
         st.write('MSE:')
@@ -148,9 +145,7 @@ def app():
         st.markdown('**2.2. Test set**')
         pred_tree_test = etr.predict(X_test.reshape(X_test.shape[0],-1))
 
-        # Y_pred_test = etr.predict(X_test)
-        # st.write('Coefficient of determination ($R^2$):')
-        # st.info( r2_score(Y_test, Y_pred_test) )
+       
 
         st.write('Error (MSE or MAE):')
         st.write('MSE:')
@@ -163,15 +158,6 @@ def app():
         st.subheader('3. Model Parameters')
         st.write(etr.get_params())
 
-        # def plot_predictions(test, predicted, title):
-        # plt.figure(figsize=(32,8))
-        # plt.plot(test, color='blue',label='Actual Supply Air Temperature')
-        # plt.plot(predicted, alpha=0.7, color='red',label='Predicted Supply Air Temperature')
-        # plt.title(title)
-        # plt.xlabel('Time')
-        # plt.ylabel('Temperature')
-        # plt.legend()
-        # plt.show()
         plot_predictions(Y_test, pred_tree_test, "Predictions made by ExtraTree model")
 
     #---------------------------------#
@@ -224,23 +210,4 @@ def app():
         st.write("Time taken = " + str(totaltime) + " seconds")
     else:
         st.info('Awaiting for CSV file to be uploaded.')
-        # if st.button('Press to use Example Dataset'):
-            # Diabetes dataset
-            #diabetes = load_diabetes()
-            #X = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
-            #Y = pd.Series(diabetes.target, name='response')
-            #df = pd.concat( [X,Y], axis=1 )
-
-            #st.markdown('The Diabetes dataset is used as the example.')
-            #st.write(df.head(5))
-
-            # Boston housing dataset
-            # boston = load_boston()
-            # X = pd.DataFrame(boston.data, columns=boston.feature_names)
-            # Y = pd.Series(boston.target, name='response')
-            # df = pd.concat( [X,Y], axis=1 )
-
-            # st.markdown('The Boston housing dataset is used as the example.')
-            # st.write(df.head(5))
-
-            # build_model(df)
+       
