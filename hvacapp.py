@@ -4,6 +4,7 @@ import home
 from multiapp import MultiApp
 import hvacmodelbuilding # import your app modules here
 import multioutputregressor
+import apiextract
 import modelmaker
 from PIL import Image
 
@@ -16,6 +17,7 @@ st.markdown("""
 """)
 # Add all your application here
 app.add_app("Home", home.app)
+app.add_app("API Extractor", apiextract.app)
 app.add_app("Model Maker", modelmaker.app)
 app.add_app("HVAC Predictor", hvacpredictor.app)
 # The main app

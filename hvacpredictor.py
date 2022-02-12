@@ -59,6 +59,6 @@ def app():
 
 
     if st.button('Press to Predict'):
-                st.write('Try adjusting the hyperparameters')
+                st.write('Try adjusting the parameters')
     
 
