@@ -33,7 +33,7 @@ size_window = 1
 
 def app():
 
-    option = st.sidebar.selectbox('Select view', ('SGDRegressor', 'ExtraTreesRegressor',
+    option = st.sidebar.selectbox('Select ML Algorithm', ('SGDRegressor', 'ExtraTreesRegressor',
                                                   'Next Model'))
 # SGDRegressor Model
     if option == 'SGDRegressor':
@@ -178,7 +178,7 @@ def app():
             return_fan_speed = st.sidebar.slider(
                 'Return Fan Speed (% of max speed)', 0.0, 100.0, 53.0570641)  # 10
             outside_air_temp = st.sidebar.slider(
-                'Outside Air Temperature (°C)', 0.0, 100.0, 19.1146049)  # 11
+                'Outside Air Temperature (°C)', -20.0, 45.0, 19.1146049)  # 11
 
         #---------------------------------#
         # Main panel
@@ -371,7 +371,7 @@ def app():
         return_fan_speed = st.sidebar.slider(
             'Return Fan Speed (% of max speed)', 0.0, 100.0, 53.0570641)  # 10
         outside_air_temp = st.sidebar.slider(
-            'Outside Air Temperature (°C)', 0.0, 100.0, 19.1146049)  # 11
+            'Outside Air Temperature (°C)', -20.0, 45.0, 19.1146049)  # 11
 
         #---------------------------------#
         # Main panel
