@@ -6,7 +6,7 @@ import socket
 socket.setdefaulttimeout(15 * 60)
 
 SCOPE = "https://www.googleapis.com/auth/spreadsheets"
-SPREADSHEET_ID = "19VJipmPrzogeVWDyIKLrtsk_CXu6ts4FdZV-7aeAThg/edit#gid=0"
+SPREADSHEET_ID = "19VJipmPrzogeVWDyIKLrtsk_CXu6ts4FdZV-7aeAThg"
 SHEET_NAME = "Database"
 GSHEET_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}"
 
