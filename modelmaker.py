@@ -70,6 +70,11 @@ def app():
                 )
                 # Fit model to training datasets
                 pipeline.fit(train_input_points, train_output_points)
+            
+            # import pickle
+            # pickle_out = open("SGDRegressor.pkl", "wb")
+            # pickle.dump(pipeline, pickle_out)
+            # pickle_out.close()
 
             # Test model_selection
             st.subheader('2. Model Testing')
@@ -127,14 +132,15 @@ def app():
             for i in range(0, len(prediction)):
                 column_name = df['columns'][1][i][1]
                 pred = prediction[i]
-                 
-                st.metric(f'{column_name}', str(pred) + '°C', str(numChange) + ' °C')
+
+                st.metric(f'{column_name}', str(pred) +
+                          '°C', str(numChange) + ' °C')
                 # metric("Hot Water Valve (% open)", "0.0 %", "-8%")
 
         #---------------------------------#
         st.write("""
         # SGD Regressor
-        ## BCIT Room Temperature Machine Learning Model Builder App using Multioutput Regressor
+        # BCIT Room Temperature Machine Learning Model Builder App using Multioutput Regressor
         In this implementation, the *Multioutput Regressor()* function is used in this app for build a regression model using the **SGDRegressor** algorithm.
         Try adjusting the hyperparameters!
         """)
@@ -185,7 +191,6 @@ def app():
 
         # Displays the dataset
         st.subheader('1. Dataset')
-
 
         if uploaded_file is not None:
             # st.write(df.head(5))
@@ -246,6 +251,12 @@ def app():
                 # Fit model to training datasets
                 pipeline.fit(train_input_points, train_output_points)
 
+            # if st.button('Press to export model'):
+            # import pickle
+            # pickle_out = open("ExtraTreesRegressor.pkl", "wb")
+            # pickle.dump(pipeline, pickle_out)
+            # pickle_out.close()
+
             # Test model_selection
             st.subheader('2. Model Testing')
             with st.spinner(text='Testing model_selection'):
@@ -270,9 +281,10 @@ def app():
                 test_input_points, test_output_points = list(zip(*test_rows))
                 test_predicted_points = pipeline.predict(test_input_points)
 
-            mean_abs_error = mean_absolute_error(test_output_points, test_predicted_points)
-            root_mean_square_error = mean_squared_error(test_output_points, test_predicted_points)
-
+            mean_abs_error = mean_absolute_error(
+                test_output_points, test_predicted_points)
+            root_mean_square_error = mean_squared_error(
+                test_output_points, test_predicted_points)
 
             # st.markdown('**2.1. Training set**')
             # mean_mean_absolute_error = sum(
@@ -307,12 +319,14 @@ def app():
             for i in range(0, len(prediction)):
                 column_name = df['columns'][1][i][1]
                 pred = prediction[i]
-                st.metric(f'{column_name}', str(pred) + '°C', str(numChange) + ' °C')
+                st.metric(f'{column_name}', str(pred) +
+                          '°C', str(numChange) + ' °C')
+
 
         #---------------------------------#
         st.write("""
         # ExtraTreesRegressor
-        ## BCIT Room Temperature Machine Learning Model Builder App using Multioutput Regressor
+        # BCIT Room Temperature Machine Learning Model Builder App using Multioutput Regressor
         In this implementation, the *ExtraTreesRegressor()* function is used in this app for build a regression model using the **ExtraTreesRegressor** algorithm.
         Try adjusting the hyperparameters!
         """)
@@ -347,7 +361,7 @@ def app():
             'Whether to use out-of-bag samples to estimate the R^2 on unseen data (oob_score)', options=[False, True])
         parameter_n_jobs = st.sidebar.selectbox(
             'Number of jobs to run in parallel (n_jobs)', options=[1, -1])
-        
+
         # Prediction Example
         st.sidebar.header('3. Prediction Example')
         cool_coil_valve = st.sidebar.slider(
