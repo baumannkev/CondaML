@@ -5,7 +5,8 @@ Prerequesites: have Python installed to your computer, and set to your environem
 
 2. Install conda environemnt on your computer: https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
 
-3. Install prerequisite libraries from requirements.txt
+3. Install prerequisite libraries from requirements.txt .
+
     a. In your terminal go to your project folder and type: 'pip install -r requirements.txt'
 
 4. Create a new conda environment called ml as follows in a terminal command line:
