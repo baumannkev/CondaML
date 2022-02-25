@@ -48,7 +48,7 @@ def app():
                     zip(*train_rows))
 
                 # Create Model
-
+            st.subheader('2. Create Model')
             with st.spinner(text='Creating model'):
                 pipeline = make_pipeline(
                     StandardScaler(),
@@ -61,6 +61,7 @@ def app():
                 )
                 # Fit model to training datasets
                 pipeline.fit(train_input_points, train_output_points)
+                st.success("Model succesfully created")
 
             # import pickle
             # pickle_out = open("SGDRegressor.pkl", "wb")
@@ -68,7 +69,7 @@ def app():
             # pickle_out.close()
 
             # Test model_selection
-            st.subheader('2. Model Testing')
+            st.subheader('3. Model Testing')
             with st.spinner(text='Testing model_selection'):
                 all_mean_absolute_errors = []
                 all_mean_squared_errors = []
@@ -89,7 +90,7 @@ def app():
                     all_mean_absolute_errors.append(mean_absolute_error)
                     all_mean_squared_errors.append(mean_squared_error)
 
-            st.markdown('**2.1. Training set**')
+            st.markdown('**3.1. Training set**')
             mean_mean_absolute_error = sum(
                 all_mean_absolute_errors) / len(all_mean_absolute_errors)
             root_mean_mean_squared_error = sqrt(
@@ -99,10 +100,11 @@ def app():
 
             st.success(f'Mean absolute error: {mean_mean_absolute_error} °C')
             st.success(
-                f'Root mean squared error: {root_mean_mean_squared_error}')
+                f'Root mean squared error: {root_mean_mean_squared_error} °C')
 
             # Prediction Example
-            st.markdown('**2.2. Prediction Example**')
+            st.subheader('4. Prediction')
+            st.markdown('**4.1. Prediction Example**')
 
             # if st.button('Predict'):
             [prediction] = pipeline.predict([[
@@ -224,7 +226,7 @@ def app():
                     zip(*train_rows))
 
                 # Create Model
-
+            st.subheader('2. Create Model')
             with st.spinner(text='Creating model'):
                 pipeline = make_pipeline(
                     StandardScaler(),
@@ -240,6 +242,7 @@ def app():
                 )
                 # Fit model to training datasets
                 pipeline.fit(train_input_points, train_output_points)
+                st.success("Model succesfully created")
 
             # if st.button('Press to export model'):
             # import pickle
@@ -248,26 +251,9 @@ def app():
             # pickle_out.close()
 
             # Test model_selection
-            st.subheader('2. Model Testing')
+            st.subheader('3. Model Testing')
             with st.spinner(text='Testing model_selection'):
-                #     all_mean_absolute_errors = []
-                #     all_mean_squared_errors = []
-
-                #     for [inputs, outputs] in test_rows:
-                #         [prediction] = pipeline.predict([inputs])
-
-                #         absolute_errors = [abs(p - o)
-                #                            for p, o in zip(prediction, outputs)]
-                #         squared_errors = [(p-o)*(p-o)
-                #                           for p, o in zip(prediction, outputs)]
-
-                #         mean_absolute_error = sum(
-                #             absolute_errors) / len(absolute_errors)
-                #         mean_squared_error = sum(
-                #             squared_errors) / len(squared_errors)
-
-                #         all_mean_absolute_errors.append(mean_absolute_error)
-                #         all_mean_squared_errors.append(mean_squared_error)
+               
                 test_input_points, test_output_points = list(zip(*test_rows))
                 test_predicted_points = pipeline.predict(test_input_points)
 
@@ -276,12 +262,6 @@ def app():
             root_mean_square_error = mean_squared_error(
                 test_output_points, test_predicted_points)
 
-            # st.markdown('**2.1. Training set**')
-            # mean_mean_absolute_error = sum(
-            #     all_mean_absolute_errors) / len(all_mean_absolute_errors)
-            # root_mean_mean_squared_error = sqrt(
-            #     sum(all_mean_squared_errors) / len(all_mean_squared_errors))
-
             st.write('Error (MSE or MAE):')
 
             st.success(f'Mean absolute error: {mean_abs_error} °C')
@@ -289,7 +269,8 @@ def app():
                 f'Root mean squared error: {root_mean_square_error} °C')
 
             # Prediction Example
-            st.markdown('**2.2. Prediction Example**')
+            st.subheader('4. Prediction')
+            st.markdown('**4.1. Prediction Example**')
 
             [prediction] = pipeline.predict([[
                 cool_coil_valve,
@@ -380,7 +361,7 @@ def app():
         # Main panel
 
         # Displays the dataset
-        st.subheader('1. Dataset')
+        st.subheader('1. Loading Dataset')
 
         # st.button('Press to predict', on_click= showBar())
 
@@ -399,7 +380,7 @@ def app():
                 build_etr_model(df)
                 # Total time elapsed since the timer started
                 totaltime = round((time.time() - starttime), 2)
-                st.markdown('3. Benchmarking')
+                st.markdown('5. Benchmarking')
                 st.success("Time taken = " + str(totaltime) + " seconds")
         else:
             st.info('Awaiting for JSON file to be uploaded.')
