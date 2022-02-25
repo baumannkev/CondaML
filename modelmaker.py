@@ -9,14 +9,7 @@ import streamlit.components.v1 as components
 import time
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.model_selection import RepeatedKFold
-from sklearn.model_selection import cross_val_score
-from sklearn.datasets import make_regression
-from numpy import std
-from numpy import mean
 import streamlit as st
-import pandas as pd
-import numpy as np
 import pickle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_squared_error, mean_absolute_error
@@ -24,8 +17,6 @@ future_time = 1
 size_window = 1
 future_time = 1
 size_window = 1
-# import matplotlib as plt
-# import seaborn as sns
 #---------------------------------#
 # Page layout
 # Page expands to full width
@@ -34,7 +25,7 @@ size_window = 1
 def app():
 
     option = st.sidebar.selectbox('Select ML Algorithm', ('SGDRegressor', 'ExtraTreesRegressor',
-                                                  'Next Model'))
+                                                          'Next Model'))
 # SGDRegressor Model
     if option == 'SGDRegressor':
         # Model building
@@ -70,7 +61,7 @@ def app():
                 )
                 # Fit model to training datasets
                 pipeline.fit(train_input_points, train_output_points)
-            
+
             # import pickle
             # pickle_out = open("SGDRegressor.pkl", "wb")
             # pickle.dump(pipeline, pickle_out)
@@ -237,16 +228,15 @@ def app():
             with st.spinner(text='Creating model'):
                 pipeline = make_pipeline(
                     StandardScaler(),
-                    MultiOutputRegressor(ExtraTreesRegressor(n_estimators=parameter_n_estimators,
-                                                             random_state=parameter_random_state,
-                                                             max_features=parameter_max_features,
-                                                             criterion=parameter_criterion,
-                                                             min_samples_split=parameter_min_samples_split,
-                                                             min_samples_leaf=parameter_min_samples_leaf,
-                                                             bootstrap=parameter_bootstrap,
-                                                             oob_score=parameter_oob_score,
-                                                             n_jobs=parameter_n_jobs)
-                                         )
+                    ExtraTreesRegressor(n_estimators=parameter_n_estimators,
+                                        random_state=parameter_random_state,
+                                        max_features=parameter_max_features,
+                                        criterion=parameter_criterion,
+                                        min_samples_split=parameter_min_samples_split,
+                                        min_samples_leaf=parameter_min_samples_leaf,
+                                        bootstrap=parameter_bootstrap,
+                                        oob_score=parameter_oob_score,
+                                        n_jobs=parameter_n_jobs)
                 )
                 # Fit model to training datasets
                 pipeline.fit(train_input_points, train_output_points)
@@ -260,24 +250,24 @@ def app():
             # Test model_selection
             st.subheader('2. Model Testing')
             with st.spinner(text='Testing model_selection'):
-            #     all_mean_absolute_errors = []
-            #     all_mean_squared_errors = []
+                #     all_mean_absolute_errors = []
+                #     all_mean_squared_errors = []
 
-            #     for [inputs, outputs] in test_rows:
-            #         [prediction] = pipeline.predict([inputs])
+                #     for [inputs, outputs] in test_rows:
+                #         [prediction] = pipeline.predict([inputs])
 
-            #         absolute_errors = [abs(p - o)
-            #                            for p, o in zip(prediction, outputs)]
-            #         squared_errors = [(p-o)*(p-o)
-            #                           for p, o in zip(prediction, outputs)]
+                #         absolute_errors = [abs(p - o)
+                #                            for p, o in zip(prediction, outputs)]
+                #         squared_errors = [(p-o)*(p-o)
+                #                           for p, o in zip(prediction, outputs)]
 
-            #         mean_absolute_error = sum(
-            #             absolute_errors) / len(absolute_errors)
-            #         mean_squared_error = sum(
-            #             squared_errors) / len(squared_errors)
+                #         mean_absolute_error = sum(
+                #             absolute_errors) / len(absolute_errors)
+                #         mean_squared_error = sum(
+                #             squared_errors) / len(squared_errors)
 
-            #         all_mean_absolute_errors.append(mean_absolute_error)
-            #         all_mean_squared_errors.append(mean_squared_error)
+                #         all_mean_absolute_errors.append(mean_absolute_error)
+                #         all_mean_squared_errors.append(mean_squared_error)
                 test_input_points, test_output_points = list(zip(*test_rows))
                 test_predicted_points = pipeline.predict(test_input_points)
 
@@ -321,7 +311,6 @@ def app():
                 pred = prediction[i]
                 st.metric(f'{column_name}', str(pred) +
                           '°C', str(numChange) + ' °C')
-
 
         #---------------------------------#
         st.write("""
@@ -418,6 +407,6 @@ def app():
     if option == 'Next Model':
 
         st.write("In-Progress")
-        with st.sidebar.expander("Model Parameters", expanded= False):
+        with st.sidebar.expander("Model Parameters", expanded=False):
             test = 123
             st.metric("Test", str(test) + " C")

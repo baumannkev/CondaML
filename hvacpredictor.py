@@ -1,25 +1,8 @@
-from PIL import Image
-import time
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.model_selection import RepeatedKFold
-from sklearn.model_selection import cross_val_score
-from sklearn.datasets import make_regression
-from numpy import std
-from numpy import mean
 import streamlit as st
-import pandas as pd
-import numpy as np
 import pickle
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import mean_squared_error, mean_absolute_error
 future_time = 1
 size_window = 1
-# import matplotlib as plt
-# import seaborn as sns
-#---------------------------------#
-# Page layout
-# Page expands to full width
+
 
 # loading in the model to predict on the data
 # pickle_in = open('ExtraTreesRegressor.pkl', 'rb')
