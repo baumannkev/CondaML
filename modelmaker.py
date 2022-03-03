@@ -21,6 +21,26 @@ size_window = 1
 # Page layout
 # Page expands to full width
 
+def plot_predictions(test, predicted, title):
+    fig = plt.figure(figsize=(32, 8))
+    plt.title(title)
+    plt.plot(test, color='blue',label='Actual Supply Air Temperature')
+    plt.plot(predicted, color='red',label='Predicted Supply Air Temperature')
+    plt.xlabel('Time')
+    plt.ylabel('Temperature')
+    plt.legend()
+    st.balloons()
+    st.pyplot(fig)
+def plot_predictions1(predicted, title):
+        fig = plt.figure(figsize=(32, 8))
+        plt.title(title)
+        # plt.plot(test, color='blue',label='Actual Supply Air Temperature')
+        plt.plot(predicted, color='red',label='Predicted Supply Air Temperature')
+        plt.xlabel('Time')
+        plt.ylabel('Temperature')
+        plt.legend()
+        st.balloons()
+        st.pyplot(fig)
 
 def app():
 
@@ -75,6 +95,7 @@ def app():
                 all_mean_squared_errors = []
 
                 for [inputs, outputs] in test_rows:
+                    # [prediction2] = pipeline.predict([outputs])
                     [prediction] = pipeline.predict([inputs])
 
                     absolute_errors = [abs(p - o)
@@ -89,6 +110,9 @@ def app():
 
                     all_mean_absolute_errors.append(mean_absolute_error)
                     all_mean_squared_errors.append(mean_squared_error)
+
+            # plot_predictions(prediction, prediction2, "Predictions comparison with actual")
+            plot_predictions1(train_output_points, "train_output_points")
 
             st.markdown('**3.1. Training set**')
             mean_mean_absolute_error = sum(

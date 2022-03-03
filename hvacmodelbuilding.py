@@ -133,8 +133,6 @@ def app():
         st.markdown('**2.1. Training set**')
         
         pred_tree_val = etr.predict(X_val.reshape(X_val.shape[0],-1))
-     
-    
 
         st.write('Error (MSE or MAE):')
         st.write('MSE:')
@@ -144,8 +142,6 @@ def app():
 
         st.markdown('**2.2. Test set**')
         pred_tree_test = etr.predict(X_test.reshape(X_test.shape[0],-1))
-
-       
 
         st.write('Error (MSE or MAE):')
         st.write('MSE:')

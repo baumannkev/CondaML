@@ -25,19 +25,52 @@ def prediction(cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_wate
                                 outside_air_temp]])
     # col1 = st.columns([3, 1])
     # col1.subheader("Here is your prediction results!")
-    col1, col2 = st.columns([3, 1])
+    col1 , col2= st.columns([5, 5])
     col1.subheader("Prediction Results")
+    import numpy as np
+    import pandas as pd
 
     numChange = 0
+    
+    dict={}
     for i in range(0, len(prediction)):
         # column_name = df['columns'][1][i][1]
         pred = prediction[i]
+        dict[i] = prediction[i]
         # st.metric(f'test', str(pred) + '°C')
     col1.write(pred)
+    st.write(dict)
 
+    from bokeh.plotting import figure
+
+    x = [1, 2, 3, 4, 5, 6, 7]
+    y = pred
+
+    p = figure(
+        title='Prediction Trend',
+        x_axis_label='Rooms',
+        y_axis_label='Temperature')
+
+    p.line(x, y, legend_label='Trend', line_width=3)
+
+    st.bokeh_chart(p, use_container_width=True)
+    # chart_data = pd.DataFrame(
+    #     data=pred,
+    #     columns=['a'])
+    # st.area_chart(chart_data)
+    chart_data = pd.DataFrame(
+            data=dict)
+    st.subheader('Bar Chart')
+    st.bar_chart(chart_data)
+
+    st.subheader('Line Chart')
+    st.line_chart(chart_data)
+
+    st.subheader('Area Chart')
+    st.area_chart(chart_data)
 
 def app():
-    option = st.sidebar.selectbox('Select ML Algorithm', ('ExtraTreesRegressor','SGDRegressor',
+    option = st.sidebar.selectbox('Select ML Algorithm', ('SGDRegressor','ExtraTreesRegressor',
                                                   'Next Model', ))
     st.write("""
     # BCIT Room Temperature Prediction App
