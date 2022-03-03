@@ -17,3 +17,4 @@ google-auth
 google-auth-httplib2
 protobuf
 streamlit_disqus
+bokeh
