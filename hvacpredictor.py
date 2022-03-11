@@ -14,7 +14,10 @@ sgdRegressor = pickle.load(pickle_in1)
 
 def prediction(cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_water_return_temp,
                dampers_pos, supply_air_temp, mixed_air_temp, return_air_temp, supply_fan_speed, return_fan_speed,
-               outside_air_temp, option):
+               outside_air_temp, option, rooms):
+
+    st.write("You chose to predict:")
+    st.write(rooms)
     if option == "ExtraTreesRegressor":
         prediction = extraTreesRegressor.predict([[cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_water_return_temp,
                                         dampers_pos, supply_air_temp, mixed_air_temp, return_air_temp, supply_fan_speed, return_fan_speed,
@@ -32,14 +35,42 @@ def prediction(cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_wate
 
     numChange = 0
     
+    roomDict = {
+        "room-412":0,
+        "room-411":0,
+        "room-410":0,
+        "room-409":0,
+        "room-408":0,
+        "room-407":0,
+        "room-415D":0,
+    }
+
     dict={}
     for i in range(0, len(prediction)):
         # column_name = df['columns'][1][i][1]
         pred = prediction[i]
         dict[i] = prediction[i]
+
         # st.metric(f'test', str(pred) + '°C')
-    col1.write(pred)
+    # col1.write(pred)
     st.write(dict)
+
+    # pred = prediction[0].array[0]
+    st.write(dict[0][2])
+
+    j = 0
+    for i in rooms:
+        roomDict.update({i:dict[0][j]})
+        j += 1
+        # st.write(dict[0][i])
+
+    st.write(roomDict)
+    # Initialization
+    if 'pipe' not in st.session_state:
+        st.session_state['pipe'] = 'pipeline'
+
+    # Read
+    st.write(st.session_state.pipe)
 
     from bokeh.plotting import figure
 
@@ -82,8 +113,8 @@ def app():
 
     st.sidebar.header('User Input Features')
 
-    room = st.sidebar.selectbox('Room', ('Room 412', 'Room 411',
-                                'Room 410', 'Room 409', 'Room 408', 'Room 407', 'Room 415D'))
+    rooms = st.sidebar.multiselect('Rooms', ('room-412', 'room-411',
+                                'room-410', 'room-409', 'room-408', 'room-407', 'room-415D'), default = (['room-412']))
 
     st.sidebar.header('Prediction Parameters')
     cool_coil_valve = st.sidebar.slider(
@@ -113,7 +144,7 @@ def app():
         st.write('Try adjusting the parameters')
         prediction(cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_water_return_temp,
                    dampers_pos, supply_air_temp, mixed_air_temp, return_air_temp, supply_fan_speed, return_fan_speed,
-                   outside_air_temp, option)
+                   outside_air_temp, option, rooms)
 
     else:
         st.write("Adjust parameters")

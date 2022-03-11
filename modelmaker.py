@@ -17,10 +17,11 @@ future_time = 1
 size_window = 1
 future_time = 1
 size_window = 1
+import random
 #---------------------------------#
 # Page layout
 # Page expands to full width
-
+color = ["red", "blue", "green", "yellow", "pink", "orange", "purple"]
 def plot_predictions(test, predicted, title):
     fig = plt.figure(figsize=(32, 8))
     plt.title(title)
@@ -35,7 +36,7 @@ def plot_predictions1(predicted, title):
         fig = plt.figure(figsize=(32, 8))
         plt.title(title)
         # plt.plot(test, color='blue',label='Actual Supply Air Temperature')
-        plt.plot(predicted, color='red',label='Predicted Supply Air Temperature')
+        plt.plot(predicted, color= random.choice(color),label='Predicted Supply Air Temperature')
         plt.xlabel('Time')
         plt.ylabel('Temperature')
         plt.legend()
@@ -111,8 +112,7 @@ def app():
                     all_mean_absolute_errors.append(mean_absolute_error)
                     all_mean_squared_errors.append(mean_squared_error)
 
-            # plot_predictions(prediction, prediction2, "Predictions comparison with actual")
-            plot_predictions1(train_output_points, "train_output_points")
+            plot_predictions1(train_output_points, "train_output_points for all 7 rooms")
 
             st.markdown('**3.1. Training set**')
             mean_mean_absolute_error = sum(
@@ -150,10 +150,12 @@ def app():
                 column_name = df['columns'][1][i][1]
                 pred = prediction[i]
 
+
                 st.metric(f'{column_name}', str(pred) +
                           '°C', str(numChange) + ' °C')
                 # metric("Hot Water Valve (% open)", "0.0 %", "-8%")
 
+            # plot_predictions1(prediction, "Predictions comparison with actual")
         #---------------------------------#
         st.write("""
         # SGD Regressor
