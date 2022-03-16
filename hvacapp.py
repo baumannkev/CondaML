@@ -6,6 +6,7 @@ import hvacmodelbuilding # import your app modules here
 import multioutputregressor
 import apiextract
 import modelmaker
+import modelling
 from PIL import Image
 
 st.set_page_config(page_title="BCIT HVAC", layout='wide', page_icon= Image.open('images/bcit.jpg'))
@@ -18,6 +19,7 @@ st.markdown("""
 # Add all your application here
 app.add_app("Home", home.app)
 app.add_app("API Extractor", apiextract.app)
+app.add_app("Modelling", modelling.app)
 app.add_app("Model Maker", modelmaker.app)
 app.add_app("HVAC Predictor", hvacpredictor.app)
 # The main app
