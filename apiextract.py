@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 from datetime import datetime, date
-from config import client_id, client_secret, api_key
+# from config import client_id, client_secret, api_key
 
 def app():
     st.title('API Data Extractor')
@@ -18,8 +18,8 @@ def app():
     def get_jwt():
         response = requests.post('https://login-global.coppertreeanalytics.com/oauth/token', data={
             'grant_type': 'client_credentials',
-            'client_id': client_id,
-            'client_secret': client_secret,
+            'client_id': st.secrets.client_id,
+            'client_secret': st.secrets.client_secret,
             'audience': 'organize'
         })
         return response.json()['access_token']
@@ -71,7 +71,7 @@ def app():
                     '''Get the data from one trend log and append its value indexed by `trend_log_id` to the dictionary `data_by_datetime` by its timestamp.'''
 
                     response = requests.get('https://kaizen.coppertreeanalytics.com/public_api/api/get_tl_data_start_end', params={
-                        'api_key': api_key,
+                        'api_key': st.secrets.api_key,
                         'tl': trend_log_id,
                         'start': window_start_str,
                         'end': window_end_str,
