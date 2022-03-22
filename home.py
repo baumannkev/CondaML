@@ -6,60 +6,64 @@ from streamlit_disqus import st_disqus
 
 def app():
     st.title('Home')
-
-    st.write('This is the `home page` of the BCIT HVAC Machine Learning app.')
-
+    st.write('Welcome to the `BCIT HVAC Machine Learning app`')
     st.write(
-        'In this app, we will be building a simple regression model using the Trend Logs dataset.')
+        'To get started, click on the `Home` button on the navigation bar above, and navigate to our API Extractor.')
 
+    st.image('images/bcitbuilding.jpg', caption="British Columbia Institute of Technology")
 
-    # COMMENT_TEMPLATE_MD = """{} - {} > {}"""
+    st.info('To learn more about our app, keep reading.')
 
+    st.markdown('''
+    # Our Problem
+    In our vast energy dependant world, we recognize the problem of energy waste and cost that plagues the energy sector.
+    
+    For example, `30-45%` of a building's energy use is devoted to heating & cooling alone.
 
+    In addition to that, `30%` of energy in buildings is wasted.
+
+    ### What are the consequences of this?
+
+    `Poor Management` and maintanance of HVAC systems lead to:
+    * Significant energy waste
+    * Reduces the comfort of the occupants 
+    * A threat to our environment
+    ''')
+
+    st.markdown('''
+    # Solution
+    Through the application of Machine Learning Algorithms in BCIT's Building Management System (BMS) we can utilize:
+    * Internet of Things (IoT) and Machine Learning Development to teach machines how to learn the patterns of past data
+    * Deep learning & Neural Networks to predict system features
+    ''')
+
+    st.markdown('''
+    All this is possible through the availability of reliable data at BCIT.
+    As well as the complexity of the BCIT management system and the need for Machine Learning analysis. 
+    ''')
+    st.image('images/BCIT-HVAC.png', caption='BCIT BMS')
+
+    st.markdown('''
+    # Methodology
+    Our proposed research led us to utilize the historical available data from BCIT, and to gain insights from the Facilities team.
+    We developed this app using Python and the Streamlit library.
+    
+    The BCIT Computer Systems Technology COMP 3800 Team in collaboration with the BCIT Mechanical Engineering Cap Stone Team have developed this BCIT HVAC System Machine Learning Model and Predictor. 
+    ''')
+
+    st.markdown('''
+    # Our next steps
+    Our next steps include: 
+    * Incorporate Deep Learning to the model
+    * Forecast data in a more precise and quick manner
+    * Implement optimization to BCIT's HVAC System 
+    ''')
     def space(num_lines=1):
         """Adds empty lines to the Streamlit app."""
         for _ in range(num_lines):
             st.write("")
-
-
-    # space(2)
-
-    # # Comments part
-
-    # conn = db.connect()
-    # comments = db.collect(conn)
-
-    # with st.expander("💬 Open comments"):
-
-    #     # Show comments
-
-    #     st.write("**Comments:**")
-
-    #     for index, entry in enumerate(comments.itertuples()):
-    #         st.markdown(COMMENT_TEMPLATE_MD.format(entry.name, entry.date, entry.comment))
-
-    #         is_last = index == len(comments) - 1
-    #         is_new = "just_posted" in st.session_state and is_last
-    #         if is_new:
-    #             st.success("☝️ Your comment was successfully posted.")
-
-    #     space(2)
-
-    #     # Insert comment
-
-    #     st.write("**Add your own comment:**")
-    #     form = st.form("comment")
-    #     name = form.text_input("Name")
-    #     comment = form.text_area("Comment")
-    #     submit = form.form_submit_button("Add comment")
-
-    #     if submit:
-    #         date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    #         db.insert(conn, [[name, comment, date]])
-    #         if "just_posted" not in st.session_state:
-    #             st.session_state["just_posted"] = True
-    #         st.experimental_rerun()
+    st.markdown("[Scroll up](#bcit-hvac-machine-learning-app)", unsafe_allow_html=True)
 
     space(10)
     with st.expander("💬 Discussion"):
-        st_disqus("bcithvacml") 
+        st_disqus("bcithvacml")

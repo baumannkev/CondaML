@@ -12,6 +12,7 @@ def app():
 
 
     st.title('Kaizen Data Pulling')
+    st.write('We protect the privacy of the BCIT buildings by using the Kaizen Building ID provided to us')
 
 
     @st.cache(ttl=(864000 - 10), persist=True, max_entries=1)
