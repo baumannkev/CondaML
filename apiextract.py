@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 from datetime import datetime, date
 # from config import client_id, client_secret, api_key
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def app():
     st.title('API Data Extractor')
@@ -12,7 +14,7 @@ def app():
 
 
     st.title('Kaizen Data Pulling')
-    st.write('We protect the privacy of the BCIT buildings by using the Kaizen Building ID provided to us')
+    st.write('We protect the privacy of the BCIT buildings by using the `Kaizen Building IDs` provided to us')
 
 
     @st.cache(ttl=(864000 - 10), persist=True, max_entries=1)
@@ -138,3 +140,7 @@ def app():
                     file_name='kaizen_data.csv',
                     mime='text/csv',
                 )
+                corrmat = dt.corr()
+                f, ax = plt.subplots(figsize=(12, 9))
+                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                st.write(f)
