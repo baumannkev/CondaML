@@ -140,7 +140,7 @@ def app():
                     file_name='kaizen_data.csv',
                     mime='text/csv',
                 )
-                corrmat = dt.corr()
-                f, ax = plt.subplots(figsize=(12, 9))
-                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
-                st.write(f)
+                # corrmat = dt.corr()
+                # f, ax = plt.subplots(figsize=(12, 9))
+                # sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                # st.write(f)
