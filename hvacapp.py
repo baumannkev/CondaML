@@ -1,11 +1,8 @@
 import streamlit as st
-import hvacpredictor
-import home
 from multiapp import MultiApp
-import hvacmodelbuilding # import your app modules here
-import multioutputregressor
+# Import apps
+import home
 import apiextract
-import modelmaker
 import modelling
 from PIL import Image
 
@@ -20,7 +17,5 @@ st.markdown("""
 app.add_app("Home", home.app)
 app.add_app("API Extractor", apiextract.app)
 app.add_app("Modelling", modelling.app)
-app.add_app("Model Maker", modelmaker.app)
-app.add_app("HVAC Predictor", hvacpredictor.app)
 # The main app
 app.run()
