@@ -4,6 +4,7 @@ from datetime import datetime, date
 # from config import client_id, client_secret, api_key
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 
 def app():
     st.title('API Data Extractor')
@@ -12,10 +13,8 @@ def app():
 
     st.write('In this app, we can extract the data using the Kaizen API.')
 
-
     st.title('Kaizen Data Pulling')
     st.write('We protect the privacy of the BCIT buildings by using the `Kaizen Building IDs` provided to us')
-
 
     @st.cache(ttl=(864000 - 10), persist=True, max_entries=1)
     def get_jwt():
@@ -27,7 +26,6 @@ def app():
         })
         return response.json()['access_token']
 
-
     jwt = get_jwt()
 
     building_id = st.text_input('Building ID', value=9871)
@@ -36,6 +34,7 @@ def app():
         @st.cache(ttl=259200, persist=True, max_entries=20)
         def get_all_trend_logs():
             url = f'https://kaizen.coppertreeanalytics.com/yana/mongo/trend_log_summary/?building={building_id}&page=1&page_size=500'
+            # else:
             trend_logs = []
 
             while url:
@@ -50,9 +49,12 @@ def app():
             return trend_logs
 
         trend_logs = get_all_trend_logs()
+        x = np.where(trend_logs == 'NE01_AHU7_RESET_POLL_TL')
 
+        st.write(x)    
+        st.write(trend_logs[1])
         selected_trend_logs = st.multiselect('Columns to extract:', options=trend_logs,
-                                            format_func=lambda x: x['name'])
+                                             format_func=lambda x: x['name'], default=[trend_logs[0]])
 
         if selected_trend_logs:
             window_start = st.date_input(
@@ -85,7 +87,8 @@ def app():
                     response_data = response.json()
 
                     for datum in response_data:
-                        dt = round_datetime(datetime.fromisoformat(datum['ts']))
+                        dt = round_datetime(
+                            datetime.fromisoformat(datum['ts']))
                         if dt not in data_by_datetime:
                             data_by_datetime[dt] = {}
                         data_by_datetime[dt][trend_log_id] = datum['v']
@@ -101,8 +104,9 @@ def app():
                         num_rows = request_column(
                             trend_log['_id'], data_by_datetime)
                     st.metric(label=trend_log['name'],
-                            value=f'{num_rows} data points')
-                    progress_bar.progress((index + 1) / len(selected_trend_logs))
+                              value=f'{num_rows} data points')
+                    progress_bar.progress(
+                        (index + 1) / len(selected_trend_logs))
 
                 num_removed_by_reference = {}
 
@@ -128,7 +132,7 @@ def app():
                     csv_string += ','.join(['Timestamp'] + column_names) + '\n'
                     for dt, data in data_by_datetime.items():
                         columns = [dt.isoformat()] + [str(data[x['_id']])
-                                                    for x in selected_trend_logs]
+                                                      for x in selected_trend_logs]
                         csv_string += ','.join(columns) + '\n'
                     return csv_string
 
@@ -142,5 +146,6 @@ def app():
                 )
                 corrmat = dt.corr()
                 f, ax = plt.subplots(figsize=(12, 9))
-                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                sns.heatmap(corrmat, cbar=True, annot=True,
+                            square=True, fmt='.2f')
                 st.write(f)
