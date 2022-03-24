@@ -6,11 +6,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 
-# st.title('Data Modelling')
-
-# st.header('Data Selection')
 
 def app():
+    st.title('Data Modelling')
+
+    st.header('Data Selection')
+
     uploaded_file = st.file_uploader(
         "Choose a CSV file containing some data", type='csv')
 
@@ -54,9 +55,9 @@ def app():
             st.header('Model Setup')
 
             test_size = st.slider('Test data percent',
-                                min_value=0.01, max_value=0.99, value=0.2,
-                                help='The fraction of the data reserved for testing instead of training the model.'
-                                )
+                                  min_value=0.01, max_value=0.99, value=0.2,
+                                  help='The fraction of the data reserved for testing instead of training the model.'
+                                  )
             train_dataframe, test_dataframe = train_test_split(
                 dataframe, test_size=test_size, shuffle=False, random_state=2022_02_02)
 
@@ -76,7 +77,7 @@ def app():
                     ExtraTreesRegressor(n_estimators=100, random_state=0)
                 )
                 pipeline.fit(train_input_values,
-                            train_output_values)
+                             train_output_values)
                 return pipeline
 
             with st.spinner('Fitting model...'):
@@ -100,7 +101,8 @@ def app():
 
                 if len(output_column_names) > 1:
                     test_output_columns = list(zip(*test_output_values))
-                    test_prediction_columns = list(zip(*test_prediction_outputs))
+                    test_prediction_columns = list(
+                        zip(*test_prediction_outputs))
 
                     for i in range(len(output_column_names)):
                         output_mean_absolute_errors.append(mean_absolute_error(
@@ -115,12 +117,12 @@ def app():
             st.subheader('Mean Absolute Errors')
 
             st.metric(label='Mean of all outputs',
-                    value=total_mean_absolute_error)
+                      value=total_mean_absolute_error)
 
             if len(output_column_names) > 1:
                 for i, column_name in enumerate(output_column_names):
                     st.metric(label=column_name,
-                            value=output_mean_absolute_errors[i])
+                              value=output_mean_absolute_errors[i])
 
             st.header('Prediction')
 
@@ -133,7 +135,7 @@ def app():
 
             for index, column_name in enumerate(input_column_names):
                 prediction_inputs.append(col1.slider(column_name, min_value=-100.0,
-                                                    max_value=100.0, value=default_inputs[index]))
+                                                     max_value=100.0, value=default_inputs[index]))
 
             col2.subheader('Predicted Outputs')
 
