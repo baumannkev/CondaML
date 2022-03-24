@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
+from pandas import DataFrame
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def app():
     st.title('Data Modelling')
@@ -68,8 +70,14 @@ def app():
                 shift_amount)
             dataframe.dropna(inplace=True)
 
+
             if st.checkbox('Preview all data'):
+                st.info("Preview of all the data")
                 st.dataframe(dataframe)
+                corrmat = dataframe.corr()
+                f, ax = plt.subplots(figsize=(12, 9))
+                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                st.write(f)
 
             st.header('Model Setup')
 
@@ -81,11 +89,22 @@ def app():
                 dataframe, test_size=test_size, shuffle=False, random_state=2022_02_02)
 
             if st.checkbox('Preview train/test data'):
-                st.write('Train data')
+                # Display data in table form and display a heatmap for train data and test data
+                st.info('Train data')
                 st.dataframe(train_dataframe)
-                st.write('Test data')
-                st.dataframe(test_dataframe)
+                corrmat = train_dataframe.corr()
+                f, ax = plt.subplots(figsize=(12, 9))
+                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                st.write(f)
 
+                st.info('Test data')
+                st.dataframe(test_dataframe)
+                corrmat = test_dataframe.corr()
+                f, ax = plt.subplots(figsize=(12, 9))
+                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                st.write(f)
+
+            
             train_input_values = train_dataframe[input_column_names].values
             train_output_values = train_dataframe[output_column_names].values
 
@@ -167,6 +186,10 @@ def app():
             else:
                 prediction_outputs = predictions
 
+            i = 0
             for index, predicted_value in enumerate(prediction_outputs):
+        
                 column_name = output_column_names[index]
                 col2.metric(label=column_name, value=predicted_value)
+            
+            st.bar_chart(prediction_outputs)
