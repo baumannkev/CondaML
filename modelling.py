@@ -97,13 +97,14 @@ def app():
                             square=True, fmt='.2f')
                 st.pyplot(fig)
 
-                st.header('Columns')
+                if st.checkbox('View Graphs'):
+                    st.header('Columns')
 
-                for column_name in input_column_names + output_column_names:
-                    st.subheader(column_name)
-                    fig, ax = plt.subplots()
-                    sns.histplot(dataframe[column_name], cbar=True)
-                    st.pyplot(fig)
+                    for column_name in input_column_names + output_column_names:
+                        st.subheader(column_name)
+                        fig, ax = plt.subplots()
+                        sns.histplot(dataframe[column_name], cbar=True)
+                        st.pyplot(fig)
 
             train_input_values = train_dataframe[input_column_names].values
             train_output_values = train_dataframe[output_column_names].values
