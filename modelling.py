@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from pandas import DataFrame
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
