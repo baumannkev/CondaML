@@ -1,3 +1,4 @@
+from sklearn.tree import DecisionTreeRegressor
 import streamlit as st
 import pickle
 future_time = 1
@@ -10,6 +11,8 @@ pickle_in = open('SGDRegressor.pkl', 'rb')
 extraTreesRegressor = pickle.load(pickle_in)
 pickle_in1 = open('SGDRegressor.pkl', 'rb')
 sgdRegressor = pickle.load(pickle_in1)
+pickle_in2 = open('SGDRegressor.pkl', 'rb')
+decisionTreeRegressor = pickle.load(pickle_in2)
 
 
 def prediction(cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_water_return_temp,
@@ -17,12 +20,16 @@ def prediction(cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_wate
                outside_air_temp, option):
     if option == "ExtraTreesRegressor":
         prediction = extraTreesRegressor.predict([[cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_water_return_temp,
-                                        dampers_pos, supply_air_temp, mixed_air_temp, return_air_temp, supply_fan_speed, return_fan_speed,
-                                        outside_air_temp]])
+            dampers_pos, supply_air_temp, mixed_air_temp, return_air_temp, supply_fan_speed, return_fan_speed,
+            outside_air_temp]])
     elif option == "SGDRegressor":
         prediction = sgdRegressor.predict([[cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_water_return_temp,
-                                dampers_pos, supply_air_temp, mixed_air_temp, return_air_temp, supply_fan_speed, return_fan_speed,
-                                outside_air_temp]])
+            dampers_pos, supply_air_temp, mixed_air_temp, return_air_temp, supply_fan_speed, return_fan_speed,
+            outside_air_temp]])
+    elif option == "DecisionTreeRegressor":
+        prediction = decisionTreeRegressor.predict([[cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_water_return_temp,
+            dampers_pos, supply_air_temp, mixed_air_temp, return_air_temp, supply_fan_speed, return_fan_speed,
+            outside_air_temp]])
     # col1 = st.columns([3, 1])
     # col1.subheader("Here is your prediction results!")
     col1 , col2= st.columns([5, 5])
@@ -70,7 +77,7 @@ def prediction(cool_coil_valve, hot_water_valve, hot_water_supply_temp, hot_wate
     st.area_chart(chart_data)
 
 def app():
-    option = st.sidebar.selectbox('Select ML Algorithm', ('SGDRegressor','ExtraTreesRegressor',
+    option = st.sidebar.selectbox('Select ML Algorithm', ('SGDRegressor','ExtraTreesRegressor', 'DecisionTreesRegressor',
                                                   'Next Model', ))
     st.write("""
     # BCIT Room Temperature Prediction App

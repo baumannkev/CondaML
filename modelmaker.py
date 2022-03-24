@@ -13,6 +13,8 @@ import streamlit as st
 import pickle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.tree import DecisionTreeRegressor
+
 future_time = 1
 size_window = 1
 future_time = 1
@@ -44,7 +46,7 @@ def plot_predictions1(predicted, title):
 
 def app():
 
-    option = st.sidebar.selectbox('Select ML Algorithm', ('SGDRegressor', 'ExtraTreesRegressor',
+    option = st.sidebar.selectbox('Select ML Algorithm', ('SGDRegressor', 'ExtraTreesRegressor', 'DecisionTreeRegressor',
                                                           'Next Model'))
 # SGDRegressor Model
     if option == 'SGDRegressor':
@@ -408,6 +410,44 @@ def app():
                 st.success("Time taken = " + str(totaltime) + " seconds")
         else:
             st.info('Awaiting for JSON file to be uploaded.')
+
+# Decitsion Tree Regressor Model
+    elif option == 'DecisionTreeRegressor':
+        def build_dtr_model(df):
+            # Reserve 20% of the data for testing
+
+            with st.spinner(text='Training model'):
+                train_rows, test_rows = train_test_split(
+                    df['rows'], test_size=0.2, shuffle=False, random_state=2022_02_02)
+
+                st.markdown('**1.2. Data splits**')
+                st.write('Training set')
+                st.success(f'Number of training data: {len(train_rows)}')
+                st.write('Test set')
+                st.success(f'Number of testing data: {len(test_rows)}')
+
+                # Both are tuples of lists of values
+                train_input_points, train_output_points = list(
+                    zip(*train_rows))
+
+                # Create Model
+            st.subheader('2. Create Model')
+            with st.spinner(text='Creating model'):
+                pipeline = make_pipeline(
+                    StandardScaler(),
+                    DecisionTreeRegressor(criterion=parameter_dtr_criterion,
+                                          splitter=parameter_dtr_splitter,
+                                          min_samples_split=parameter_dtr_min_samples_split,
+                                          min_samples_leaf=parameter_dtr_min_samples_leaf,
+                                          min_weight_fraction_leaf=parameter_dtr_min_weight_fraction_leaf,
+                                          )
+                )
+                # Fit model to training datasets
+                pipeline.fit(train_input_points, train_output_points)
+                st.success("Model succesfully created")
+
+            # Test model_selection
+            st.subheader('3. Model Testing')
 
     if option == 'Next Model':
 
