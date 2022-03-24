@@ -80,6 +80,8 @@ def app():
                 st.header('All data')
                 st.info("Details of the data")
                 st.write(dataframe.describe())
+                testData = dataframe.describe().drop("count")
+                st.area_chart(testData, use_container_width= True)
                 st.info("All data in a table")
                 st.dataframe(dataframe)
                 st.info("Heatmap of the dataframe")
@@ -88,7 +90,6 @@ def app():
                 sns.heatmap(correlations, cbar=True, annot=True,
                             square=True, fmt='.2f')
                 st.pyplot(fig)
-
                 if st.checkbox('View Graphs'):
                     st.header('Columns')
                     for column_name in input_column_names + output_column_names:
