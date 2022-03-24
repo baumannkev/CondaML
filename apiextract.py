@@ -52,64 +52,41 @@ def app():
             return trend_logs
 
         trend_logs = get_all_trend_logs()
-        # x = np.where(trend_logs == 'NE01_AHU7_RESET_POLL_TL')
 
-        # for dic_x in trend_logs:
-        #     for dic_y in dic_x:
-        #         for dic_z in dic_y:
-        #             st.write(dic_z['name'])
-        # for i in range(len(trend_logs)):
-        #     x = np.where(trend_logs[i]["name"] == "NE01_AHU7_RESET_POLL_TL")
-        #     st.write(i)
-        #     st.write(trend_logs[i]["name"])
-        default_selection = []
-        if st.checkbox("Press to use example columns"):
+        if st.checkbox('Use example columns'):
+            default_names = [
+                'NE01_AHU7_RESET_POLL_TL',
+                'NE01_AHU7_HCV_POLL_TL',
+                'NE01_AHU7_HC_SWT_POLL_TL',
+                'NE01_AHU7_HC_RWT_POLL_TL',
+                'NE01_AHU7_MAD_FB_POLL_TL',
+                'NE01_AHU7_HC_SAT_POLL_TL',
+                'NE01_AHU7_MAT_POLL_TL',
+                'NE01_AHU7_RAT_POLL_TL',
+                'NE01_AHU7_SF_SPD_POLL_TL',
+                'NE01_AHU7_EF_SPD_POLL_TL',
+                'NE01_AHU5_OAT_GV_POLL_TL',
+                'VAV4_1_RT_TL',
+                'VAV4_2_RT_TL',
+                'VAV4_3_RT_TL',
+                'VAV4_4_RT_TL',
+                'VAV4_5_RT_TL',
+                'VAV4_6_RT_TL',
+                'VAV4_7_RT_TL'
+            ]
             default_selection = [
-                # NE01_AHU7_RESET_POLL_TL
-                trend_logs[5684],
-                # NE01_AHU7_HCV_POLL_TL
-                trend_logs[5719],
-                # NE01_AHU7_HC_SWT_POLL_TL
-                trend_logs[5691],
-                # NE01_AHU7_HC_RWT_POLL_TL
-                trend_logs[5692],
-                # NE01_AHU7_MAD_FB_POLL_TL
-                trend_logs[5689],
-                # NE01_AHU7_HC_SAT_POLL_TL
-                trend_logs[5690],
-                # NE01_AHU7_MAT_POLL_TL
-                trend_logs[5687],
-                # NE01_AHU7_RAT_POLL_TL
-                trend_logs[5688],
-                # NE01_AHU7_SF_SPD_POLL_TL
-                trend_logs[5695],
-                # NE01_AHU7_EF_SPD_POLL_TL
-                trend_logs[5706],
-                # NE01_AHU5_OAT_GV_POLL_TL
-                trend_logs[6873],
-                #  VAV 4-1 (Room 412) Actual Temperature (°C)
-                trend_logs[5542],
-                # VAV 4-2 (Room 411)
-                trend_logs[5566],
-                # VAV 4-3 (Room 410)
-                trend_logs[5590],
-                # VAV 4-4 (Room 409)
-                trend_logs[5613],
-                # VAV 4-5 (Room 408)
-                trend_logs[5637],
-                # VAV 4-6 (Room 407)
-                trend_logs[5660],
-                # VAV 4-7 (Room 415D)
-                trend_logs[5726], ]
-        else: 
+                x for x in trend_logs if x['name'] in default_names]
+            default_selection.sort(key=lambda x: x['name'])
+        else:
             default_selection = []
+
         selected_trend_logs = st.multiselect('Columns to extract:', options=trend_logs,
-                                             format_func=lambda x: x['name'], default = default_selection)
+                                             format_func=lambda x: x['name'], default=default_selection)
 
         if selected_trend_logs:
-            if st.checkbox("See snapshot of data"):
-
+            if st.checkbox('Show trend log details'):
                 st.write(selected_trend_logs)
+
             window_start = st.date_input(
                 'Data window start', value=date(2000, 1, 1))
 
