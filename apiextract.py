@@ -1,12 +1,6 @@
 import streamlit as st
 import requests
 from datetime import datetime, date
-# from config import client_id, client_secret, api_key
-import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-from pandas import DataFrame as df
 
 
 def app():
@@ -37,7 +31,6 @@ def app():
         @st.cache(ttl=259200, persist=True, max_entries=20)
         def get_all_trend_logs():
             url = f'https://kaizen.coppertreeanalytics.com/yana/mongo/trend_log_summary/?building={building_id}&page=1&page_size=500'
-            # else:
             trend_logs = []
 
             while url:
@@ -80,7 +73,7 @@ def app():
         else:
             default_selection = []
 
-        selected_trend_logs = st.multiselect('Columns to extract:', options=trend_logs,
+        selected_trend_logs = st.multiselect('Columns to extract', options=trend_logs,
                                              format_func=lambda x: x['name'], default=default_selection)
 
         if selected_trend_logs:
