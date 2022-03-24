@@ -85,23 +85,25 @@ def app():
             train_dataframe, test_dataframe = train_test_split(
                 dataframe, test_size=test_size, shuffle=False, random_state=2022_02_02)
 
-            if st.checkbox('Preview train/test data'):
-                # Display data in table form and display a heatmap for train data and test data
-                st.info('Train data')
-                st.dataframe(train_dataframe)
-                corrmat = train_dataframe.corr()
-                f, ax = plt.subplots(figsize=(12, 9))
-                sns.heatmap(corrmat, cbar=True, annot=True,
-                            square=True, fmt='.2f')
-                st.write(f)
+            if st.checkbox('Visualize data'):
+                st.header('All data')
 
-                st.info('Test data')
-                st.dataframe(test_dataframe)
-                corrmat = test_dataframe.corr()
-                f, ax = plt.subplots(figsize=(12, 9))
-                sns.heatmap(corrmat, cbar=True, annot=True,
+                # Display data in table form and display a heatmap for train data and test data
+                st.dataframe(dataframe)
+
+                correlations = dataframe.corr()
+                fig, ax = plt.subplots(figsize=(12, 9))
+                sns.heatmap(correlations, cbar=True, annot=True,
                             square=True, fmt='.2f')
-                st.write(f)
+                st.pyplot(fig)
+
+                st.header('Columns')
+
+                for column_name in input_column_names + output_column_names:
+                    st.subheader(column_name)
+                    fig, ax = plt.subplots()
+                    ax.hist(dataframe[column_name], bins=20)
+                    st.pyplot(fig)
 
             train_input_values = train_dataframe[input_column_names].values
             train_output_values = train_dataframe[output_column_names].values
