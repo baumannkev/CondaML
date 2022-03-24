@@ -25,7 +25,8 @@ def app():
 
     jwt = get_jwt()
 
-    building_id = st.text_input('Building ID', value=9871)
+    building_id = st.text_input(
+        'Building ID', value=9871, help='The **building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.')
 
     if building_id:
         @st.cache(ttl=259200, persist=True, max_entries=20)
