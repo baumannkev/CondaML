@@ -8,16 +8,17 @@ from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 def app():
     st.title('Data Modelling')
 
     st.header('Data Selection')
 
-    userExample = False
+    user_example = False
     uploaded_file = ""
     if st.checkbox('Use example dataset'):
         uploaded_file = open("dataset/example_dataset.csv")
-        userExample = True
+        user_example = True
     else:
         uploaded_file = st.file_uploader(
             "Choose a CSV file containing some data", type='csv')
@@ -34,20 +35,17 @@ def app():
         all_column_names = list(dataframe.columns)
 
         # Append the items from the example dataset to the default inputs and outputs
-        defaultInputColumns = []
-        defaultOutputColumns = []
-        if userExample == True:
-            for i in range(1, len(all_column_names) - 7):
-                defaultInputColumns.append(all_column_names[i])
-            for i in range(12, len(all_column_names) ):
-                defaultOutputColumns.append(all_column_names[i])
-                
+        if user_example:
+            default_input_columns = all_column_names[1:-7]
+            default_output_columns = all_column_names[-7:-1]
         else:
-            defaultInputColumns = []
-            defaultOutputColumns = []
-        
-        input_column_names = st.multiselect('Inputs', all_column_names, default=defaultInputColumns)
-        output_column_names = st.multiselect('Outputs', all_column_names, default=defaultOutputColumns)
+            default_input_columns = []
+            default_output_columns = []
+
+        input_column_names = st.multiselect(
+            'Inputs', all_column_names, default=default_input_columns)
+        output_column_names = st.multiselect(
+            'Outputs', all_column_names, default=default_output_columns)
 
         st.caption(
             'Select which columns of the data will be inputs and which will be predicted outputs.')
@@ -69,13 +67,13 @@ def app():
                 shift_amount)
             dataframe.dropna(inplace=True)
 
-
             if st.checkbox('Preview all data'):
                 st.info("Preview of all the data")
                 st.dataframe(dataframe)
                 corrmat = dataframe.corr()
                 f, ax = plt.subplots(figsize=(12, 9))
-                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                sns.heatmap(corrmat, cbar=True, annot=True,
+                            square=True, fmt='.2f')
                 st.write(f)
 
             st.header('Model Setup')
@@ -93,17 +91,18 @@ def app():
                 st.dataframe(train_dataframe)
                 corrmat = train_dataframe.corr()
                 f, ax = plt.subplots(figsize=(12, 9))
-                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                sns.heatmap(corrmat, cbar=True, annot=True,
+                            square=True, fmt='.2f')
                 st.write(f)
 
                 st.info('Test data')
                 st.dataframe(test_dataframe)
                 corrmat = test_dataframe.corr()
                 f, ax = plt.subplots(figsize=(12, 9))
-                sns.heatmap(corrmat, cbar=True, annot=True, square=True, fmt='.2f')
+                sns.heatmap(corrmat, cbar=True, annot=True,
+                            square=True, fmt='.2f')
                 st.write(f)
 
-            
             train_input_values = train_dataframe[input_column_names].values
             train_output_values = train_dataframe[output_column_names].values
 
@@ -187,8 +186,8 @@ def app():
 
             i = 0
             for index, predicted_value in enumerate(prediction_outputs):
-        
+
                 column_name = output_column_names[index]
                 col2.metric(label=column_name, value=predicted_value)
-            
+
             st.bar_chart(prediction_outputs)
