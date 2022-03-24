@@ -12,8 +12,14 @@ def app():
 
     st.header('Data Selection')
 
-    uploaded_file = st.file_uploader(
-        "Choose a CSV file containing some data", type='csv')
+    userExample = False
+    uploaded_file = ""
+    if st.checkbox('Use example dataset'):
+        uploaded_file = open("dataset/example_dataset.csv")
+        userExample = True
+    else:
+        uploaded_file = st.file_uploader(
+            "Choose a CSV file containing some data", type='csv')
 
     if uploaded_file is not None:
         @st.cache(allow_output_mutation=True, max_entries=5)
@@ -26,8 +32,21 @@ def app():
 
         all_column_names = list(dataframe.columns)
 
-        input_column_names = st.multiselect('Inputs', all_column_names)
-        output_column_names = st.multiselect('Outputs', all_column_names)
+        # Append the items from the example dataset to the default inputs and outputs
+        defaultInputColumns = []
+        defaultOutputColumns = []
+        if userExample == True:
+            for i in range(1, len(all_column_names) - 7):
+                defaultInputColumns.append(all_column_names[i])
+            for i in range(12, len(all_column_names) ):
+                defaultOutputColumns.append(all_column_names[i])
+                
+        else:
+            defaultInputColumns = []
+            defaultOutputColumns = []
+        
+        input_column_names = st.multiselect('Inputs', all_column_names, default=defaultInputColumns)
+        output_column_names = st.multiselect('Outputs', all_column_names, default=defaultOutputColumns)
 
         st.caption(
             'Select which columns of the data will be inputs and which will be predicted outputs.')
