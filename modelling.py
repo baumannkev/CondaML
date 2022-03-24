@@ -134,14 +134,14 @@ def app():
             default_inputs = test_dataframe.values[0].tolist()
 
             for index, column_name in enumerate(input_column_names):
-                prediction_inputs.append(col1.slider(column_name, min_value=-100.0,
-                                                     max_value=100.0, value=default_inputs[index]))
+                min_value = dataframe[column_name].min() - 10
+                max_value = dataframe[column_name].max() + 10
+                prediction_inputs.append(col1.slider(column_name, min_value=min_value,
+                                                     max_value=max_value, value=default_inputs[index]))
 
             col2.subheader('Predicted Outputs')
 
             predictions = pipeline.predict([prediction_inputs])
-
-            st.write(type(predictions))
 
             if len(output_column_names) > 1:
                 [prediction_outputs] = predictions
