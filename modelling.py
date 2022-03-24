@@ -102,7 +102,7 @@ def app():
                 for column_name in input_column_names + output_column_names:
                     st.subheader(column_name)
                     fig, ax = plt.subplots()
-                    ax.hist(dataframe[column_name], bins=20)
+                    sns.histplot(dataframe[column_name], cbar=True)
                     st.pyplot(fig)
 
             train_input_values = train_dataframe[input_column_names].values
