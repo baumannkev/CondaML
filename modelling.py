@@ -67,15 +67,6 @@ def app():
                 shift_amount)
             dataframe.dropna(inplace=True)
 
-            if st.checkbox('Preview all data'):
-                st.info("Preview of all the data")
-                st.dataframe(dataframe)
-                corrmat = dataframe.corr()
-                f, ax = plt.subplots(figsize=(12, 9))
-                sns.heatmap(corrmat, cbar=True, annot=True,
-                            square=True, fmt='.2f')
-                st.write(f)
-
             st.header('Model Setup')
 
             test_size = st.slider('Test data percent',
@@ -87,10 +78,11 @@ def app():
 
             if st.checkbox('Visualize data'):
                 st.header('All data')
-
-                # Display data in table form and display a heatmap for train data and test data
+                st.info("Details of the data")
+                st.write(dataframe.describe())
+                st.info("All data in a table")
                 st.dataframe(dataframe)
-
+                st.info("Heatmap of the dataframe")
                 correlations = dataframe.corr()
                 fig, ax = plt.subplots(figsize=(12, 9))
                 sns.heatmap(correlations, cbar=True, annot=True,
@@ -99,7 +91,6 @@ def app():
 
                 if st.checkbox('View Graphs'):
                     st.header('Columns')
-
                     for column_name in input_column_names + output_column_names:
                         st.subheader(column_name)
                         fig, ax = plt.subplots()
