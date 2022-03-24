@@ -33,3 +33,21 @@ Network URL: http://10.0.0.11:8501
 
 P.S: If you run into a problem that says "missing module" error, make sure to 'pip install' said module on your local machine.
    
+Directory
+```
+.
+├── .streamlit
+│   ├── config.toml
+├── images
+│   ├── BCIT-HVAC.png
+│   ├── bcit.jpg
+│   └── bcitbuilding.jpg
+├── .gitignore
+├── apiextract.py
+├── home.py
+├── hvacapp.py
+├── modelling.py
+├── multiapp.py
+├── README.md
+└── requirements.txt
+```
