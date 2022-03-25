@@ -1,9 +1,19 @@
+"""API Extractor for the app
+
+This script allows the user to access the Kaizen database using an API key from a TOML file (secrets.toml) and create and download a comma separated value file (kaizen_data.csv)
+containing several columns' worth of data of a specific building from a range of dates.
+
+If the user doesn't know what columns to extract, the script has default columns the user can use instead of choosing themselves.
+"""
 import streamlit as st
 import requests
 from datetime import datetime, date
 
 
 def app():
+    """Extracts data from database and produces a CSV file from specified inputs
+    """
+
     st.title('API Data Extractor')
 
     st.write('This is the `API Extractor` of the BCIT HVAC Machine Learning app.')
@@ -15,6 +25,13 @@ def app():
 
     @st.cache(ttl=(864000 - 10), persist=True, max_entries=1)
     def get_jwt():
+        """Connects to the Kaizen database using the provided client ID
+        
+        Returns
+        -------
+        jwt
+            a JSON Web Token containing encrypted data from the Kaizen database
+        """
         response = requests.post('https://login-global.coppertreeanalytics.com/oauth/token', data={
             'grant_type': 'client_credentials',
             'client_id': st.secrets.client_id,
@@ -31,6 +48,13 @@ def app():
     if building_id:
         @st.cache(ttl=259200, persist=True, max_entries=20)
         def get_all_trend_logs():
+            """Filters through the database using inputted building ID and produces a trend log
+            
+            Returns
+            -------
+            trend_logs : list
+                a list containing all trend logs stored in database for variable building_id
+            """
             url = f'https://kaizen.coppertreeanalytics.com/yana/mongo/trend_log_summary/?building={building_id}&page=1&page_size=500'
             trend_logs = []
 
@@ -94,10 +118,35 @@ def app():
 
             if st.button(f'Pull Data'):
                 def round_datetime(dt, minutes=15):
+                    """Takes in an inputted date and time and rounds it to the closest 15th minute
+                    
+                    Parameters
+                    ----------
+                    dt
+                        a datetime object to be rounded
+                    minutes : optional
+                        an int for the dt object to be compared to for rounding
+                        
+                    Returns
+                    -------
+                        a datetime object rounded to the closest 15th minute
+                    """
                     return dt.replace(minute=(dt.minute // minutes * minutes), second=0, microsecond=0)
 
                 def request_column(trend_log_id: str, data_by_datetime: dict):
-                    '''Get the data from one trend log and append its value indexed by `trend_log_id` to the dictionary `data_by_datetime` by its timestamp.'''
+                    """Get the data from one trend log and append its value indexed by `trend_log_id` to the dictionary `data_by_datetime` by its timestamp.
+                    
+                    Parameters
+                    ----------
+                    trend_log_id : str
+                        a string containing the ID of the trend log to be extracted from the database
+                    data_by_datetime : dict
+                        a dictionary containing the timestamp
+                        
+                    Returns
+                    -------
+                    int
+                        the number of items retrieved from database using specified trend log ID, start timestamp, and end timestamp"""
 
                     response = requests.get('https://kaizen.coppertreeanalytics.com/public_api/api/get_tl_data_start_end', params={
                         'api_key': st.secrets.api_key,
@@ -151,6 +200,13 @@ def app():
 
                 @st.cache
                 def get_csv_string():
+                    """Produces a CSV string consisting of all gathered data from database using specified, inputted values
+                    
+                    Returns
+                    -------
+                    csv_string : str
+                        a string containing gathered data separated by commas
+                        """
                     csv_string = ''
                     column_names = [x['name'] for x in selected_trend_logs]
                     csv_string += ','.join(['Timestamp'] + column_names) + '\n'

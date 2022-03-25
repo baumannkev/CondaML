@@ -1,3 +1,11 @@
+"""Entry point of the app
+
+This app allows the user to create a model that predicts the temperature of specified rooms and creates a visual representation of the predicted output using graphs.
+
+This app first takes in and accepts the API key for Kaizen from a TOML file to be able to access the building data using the API Extractor.
+Afterwards, the user will input the building ID, the building data columns to be extracted, the date range of values to extract, and then assemble all data points into a single CSV file, which can be downloaded.
+Finally, the user will use the provided CSV file to predict and display a graph of the output, as well as display some statistics about the input and output.
+"""
 import streamlit as st
 from multiapp import MultiApp
 # Import apps
