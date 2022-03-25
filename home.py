@@ -12,6 +12,8 @@ def app():
 
     st.image('images/bcitbuilding.jpg', caption="British Columbia Institute of Technology")
 
+    st.markdown('<style>img {border: 10px solid #fff400;}</style>', unsafe_allow_html=True)
+
     st.info('To learn more about our app, keep reading.')
 
     st.markdown('''
