@@ -90,8 +90,8 @@ def app():
                 sns.heatmap(correlations, cbar=True, annot=True,
                             square=True, fmt='.2f')
                 st.pyplot(fig)
-                if st.checkbox('View Graphs'):
-                    st.header('Columns')
+                if st.checkbox('View Histograms'):
+                    st.header('Histograms')
                     for column_name in input_column_names + output_column_names:
                         st.subheader(column_name)
                         fig, ax = plt.subplots()

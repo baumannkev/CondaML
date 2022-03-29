@@ -102,14 +102,18 @@ def app():
                                              format_func=lambda x: x['name'], default=default_selection)
 
         if selected_trend_logs:
+            # current datetime
+            now = datetime.now()
+
+            current_date = now.date()
             if st.checkbox('Show trend log details'):
                 st.write(selected_trend_logs)
 
             window_start = st.date_input(
                 'Data window start', value=date(2000, 1, 1))
-
+        
             window_end = st.date_input(
-                'Data window end', value=date(2020, 2, 1))
+                'Data window end', value=current_date)
 
             window_start_str = datetime.fromordinal(
                 window_start.toordinal()).isoformat()
