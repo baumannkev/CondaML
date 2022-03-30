@@ -10,6 +10,9 @@ import seaborn as sns
 
 
 def app():
+    """Produces a model from an uploaded CSV file that came from the API Extractor.
+    
+    If no CSV file is uploaded, the user can use an example dataset automatically provided in the dataset folder."""
     st.title('Data Modelling')
 
     st.header('Data Selection')
@@ -26,6 +29,12 @@ def app():
     if uploaded_file is not None:
         @st.cache(allow_output_mutation=True, max_entries=5)
         def get_dataframe():
+            """Reads the uploaded CSV file and provides a dataframe to be used for modelling.
+            
+            Returns
+            -------
+            dataframe : DataFrame
+                a dataframe object consisting of data extracted from the uploaded CSV file"""
             dataframe = pd.read_csv(uploaded_file)
             dataframe.dropna(inplace=True)
             return dataframe
@@ -103,6 +112,12 @@ def app():
 
             @st.cache(allow_output_mutation=True, show_spinner=False)
             def get_pipeline():
+                """Creates a pipeline using ExtraTreesRegressor model and returns it to be used for the modelling.
+                
+                Returns
+                -------
+                pipeline : Pipeline
+                    a pipeline object made from ExtraTreesRegressor using values and inputs from app"""
                 pipeline = make_pipeline(
                     StandardScaler(),
                     ExtraTreesRegressor(n_estimators=100, random_state=0)
@@ -118,6 +133,12 @@ def app():
 
             @st.cache(max_entries=100)
             def get_model_mean_absolute_errors():
+                """Calculates and returns the total and output mean absolute errors of the model.
+                
+                Returns
+                -------
+                (total_mean_absolute_error, output_mean_absolute_error)
+                    a tuple containing the total and output mean absolute error of the created model"""
                 test_input_values = test_dataframe[input_column_names].values
 
                 test_output_values = test_dataframe[output_column_names].values
