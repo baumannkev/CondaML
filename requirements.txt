@@ -18,4 +18,4 @@ google-auth-httplib2
 protobuf
 streamlit_disqus
 bokeh==2.4.1
-click==8.1.0
+click==8
