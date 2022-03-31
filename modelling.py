@@ -11,12 +11,21 @@ import seaborn as sns
 
 def app():
     """Produces a model from an uploaded CSV file that came from the API Extractor.
-    
+
     If no CSV file is uploaded, the user can use an example dataset automatically provided in the dataset folder."""
     st.title('Data Modelling')
 
+    with st.expander("See Explanation"):
+        st.write("""
+            This modelling app allows the user to create a model that predicts the temperature of specified rooms from an uploaded CSV file and creates a visual representation of the predicted output using graphs
+
+            The model creates a pipeline using ExtraTreesRegressor Machine Learning algorithm from the [sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html) library and returns it to be used for the modelling 
+        
+        """)
     st.header('Data Selection')
 
+    st.caption(
+        'Choose to use an Example Dataset extracted from the API Extractor. The input and output columns will be autofilled but still editable.')
     user_example = False
     uploaded_file = ""
     if st.checkbox('Use example dataset'):
@@ -30,7 +39,7 @@ def app():
         @st.cache(allow_output_mutation=True, max_entries=5)
         def get_dataframe():
             """Reads the uploaded CSV file and provides a dataframe to be used for modelling.
-            
+
             Returns
             -------
             dataframe : DataFrame
@@ -53,19 +62,18 @@ def app():
             default_input_columns = []
             default_output_columns = []
 
+        st.caption(
+            'Select which columns of the data will be inputs and which will be predicted outputs.')
         input_column_names = st.multiselect(
             'Inputs', all_column_names, default=default_input_columns)
         output_column_names = st.multiselect(
             'Outputs', all_column_names, default=default_output_columns)
 
-        st.caption(
-            'Select which columns of the data will be inputs and which will be predicted outputs.')
-
         for column_name in input_column_names:
             if column_name in output_column_names:
                 st.warning(f'**{column_name}** is in both inputs and outputs!')
         if input_column_names and output_column_names:
-            
+
             dataframe.drop(columns=[
                 x for x in dataframe.columns if x not in input_column_names and x not in output_column_names], inplace=True)
 
@@ -92,7 +100,7 @@ def app():
                 st.info("Details of the data")
                 st.write(dataframe.describe())
                 testData = dataframe.describe().drop("count")
-                st.area_chart(testData, use_container_width= True)
+                st.area_chart(testData, use_container_width=True)
                 st.info("All data in table")
                 st.dataframe(dataFrame2)
                 st.info("Heatmap of the dataframe")
@@ -115,7 +123,7 @@ def app():
             @st.cache(allow_output_mutation=True, show_spinner=False)
             def get_pipeline():
                 """Creates a pipeline using ExtraTreesRegressor model and returns it to be used for the modelling.
-                
+
                 Returns
                 -------
                 pipeline : Pipeline
@@ -136,7 +144,7 @@ def app():
             @st.cache(max_entries=100)
             def get_model_mean_absolute_errors():
                 """Calculates and returns the total and output mean absolute errors of the model.
-                
+
                 Returns
                 -------
                 (total_mean_absolute_error, output_mean_absolute_error)
@@ -171,12 +179,12 @@ def app():
             st.subheader('Mean Absolute Errors')
 
             st.metric(label='Mean of all outputs',
-                      value=total_mean_absolute_error)
+                      value= "{}".format(total_mean_absolute_error))
 
             if len(output_column_names) > 1:
                 for i, column_name in enumerate(output_column_names):
                     st.metric(label=column_name,
-                              value=output_mean_absolute_errors[i])
+                              value="{}".format(output_mean_absolute_errors[i]), delta=(output_mean_absolute_errors[i] - total_mean_absolute_error))
 
             st.header('Prediction')
 
@@ -206,6 +214,8 @@ def app():
             for index, predicted_value in enumerate(prediction_outputs):
 
                 column_name = output_column_names[index]
-                col2.metric(label=column_name, value=predicted_value)
+                col2.metric(label=column_name, value="{}".format(predicted_value))
 
             st.bar_chart(prediction_outputs)
+
+            st.balloons()

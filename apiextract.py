@@ -16,9 +16,12 @@ def app():
 
     st.title('API Data Extractor')
 
-    st.write('This is the `API Extractor` of the BCIT HVAC Machine Learning app.')
-
-    st.write('In this app, we can extract the data using the Kaizen API.')
+    with st.expander("See explanation"):
+        st.write("""
+            This is the `API Extractor` of the BCIT HVAC Machine Learning app
+            In this app, we can extract the data using the Kaizen API
+        """)
+        st.image("https://static.streamlit.io/examples/dice.jpg")
 
     st.title('Kaizen Data Pulling')
     st.write('We protect the privacy of the BCIT buildings by using the `Kaizen Building IDs` provided to us')
@@ -201,6 +204,8 @@ def app():
                 for (data_reference, num_removed) in num_removed_by_reference.items():
                     st.metric(
                         label=f'Because {data_reference} was missing', value=num_removed)
+                
+                st.balloons()
 
                 @st.cache
                 def get_csv_string():
