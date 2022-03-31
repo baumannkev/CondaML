@@ -41,6 +41,8 @@ def app():
 
         dataframe = get_dataframe().copy()
 
+        dataFrame2 = get_dataframe().copy()
+
         all_column_names = list(dataframe.columns)
 
         # Append the items from the example dataset to the default inputs and outputs
@@ -62,8 +64,8 @@ def app():
         for column_name in input_column_names:
             if column_name in output_column_names:
                 st.warning(f'**{column_name}** is in both inputs and outputs!')
-
         if input_column_names and output_column_names:
+            
             dataframe.drop(columns=[
                 x for x in dataframe.columns if x not in input_column_names and x not in output_column_names], inplace=True)
 
@@ -91,8 +93,8 @@ def app():
                 st.write(dataframe.describe())
                 testData = dataframe.describe().drop("count")
                 st.area_chart(testData, use_container_width= True)
-                st.info("All data in a table")
-                st.dataframe(dataframe)
+                st.info("All data in table")
+                st.dataframe(dataFrame2)
                 st.info("Heatmap of the dataframe")
                 correlations = dataframe.corr()
                 fig, ax = plt.subplots(figsize=(12, 9))
