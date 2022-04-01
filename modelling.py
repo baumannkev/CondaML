@@ -218,16 +218,22 @@ def app():
 
             predictions = pipeline.predict([prediction_inputs])
 
+            "data", st.session_state
+
             if len(output_column_names) > 1:
                 [prediction_outputs] = predictions
             else:
                 prediction_outputs = predictions
 
+            for (i, item) in enumerate(prediction_outputs):
+                if str(i) not in st.session_state:
+                    st.session_state[i] = item
+
             i = 0
             for index, predicted_value in enumerate(prediction_outputs):
 
                 column_name = output_column_names[index]
-                col2.metric(label=column_name,
-                            value="{}".format(predicted_value))
+                col2.metric(label=column_name, value="{}".format(predicted_value), delta="{}".format(
+                    predicted_value - st.session_state[str(index)]))
 
             st.bar_chart(prediction_outputs)
