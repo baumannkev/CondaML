@@ -7,14 +7,21 @@ from streamlit_disqus import st_disqus
 def app():
     """Displays and prints the homepage of the app, including welcome tag, instructions, and information about app.
     """
+
+    st.caption("""
+            <hr>
+            """, unsafe_allow_html=True)
+
     st.title('Home')
     st.write('Welcome to the `BCIT HVAC Machine Learning app`')
     st.write(
         'To get started, click on the `Home` button on the navigation bar above, and navigate to our API Extractor.')
 
-    st.image('images/bcitbuilding.jpg', caption="British Columbia Institute of Technology")
+    st.image('images/bcitbuilding.jpg',
+             caption="British Columbia Institute of Technology")
 
-    st.markdown('<style>img {border: 5px solid #fff400;}</style>', unsafe_allow_html=True)
+    st.markdown(
+        '<style>img {border: 5px solid #fff400;}</style>', unsafe_allow_html=True)
 
     st.info('To learn more about our app, keep reading.')
 
@@ -62,11 +69,13 @@ def app():
     * Forecast data in a more precise and quick manner
     * Implement optimization to BCIT's HVAC System 
     ''')
+
     def space(num_lines=1):
         """Adds empty lines to the Streamlit app."""
         for _ in range(num_lines):
             st.write("")
-    st.markdown("[Scroll up](#bcit-hvac-machine-learning-app)", unsafe_allow_html=True)
+    st.markdown("[Scroll up](#bcit-hvac-machine-learning-app)",
+                unsafe_allow_html=True)
 
     space(10)
     with st.expander("💬 Discussion"):
