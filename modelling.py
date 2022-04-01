@@ -188,6 +188,12 @@ def app():
 
             st.header('Prediction')
 
+            with st.expander("See Explanation"):
+                st.write("""
+                    The predicted outputs shows the rooms, temperature and the delta.
+                    The values updates real-time when input sliders are modified.
+                """)
+
             col1, col2 = st.columns(2)
 
             col1.subheader('Inputs')
