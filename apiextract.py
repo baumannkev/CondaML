@@ -14,6 +14,10 @@ def app():
     """Extracts data from database and produces a CSV file from specified inputs
     """
 
+    st.caption("""
+            <hr>
+            """, unsafe_allow_html=True)
+
     st.title('API Data Extractor')
 
     with st.expander("See explanation"):
@@ -29,7 +33,7 @@ def app():
     @st.cache(ttl=(864000 - 10), persist=True, max_entries=1)
     def get_jwt():
         """Connects to the Kaizen database using the provided client ID
-        
+
         Returns
         -------
         jwt
@@ -52,7 +56,7 @@ def app():
         @st.cache(ttl=259200, persist=True, max_entries=20)
         def get_all_trend_logs():
             """Filters through the database using inputted building ID and produces a trend log
-            
+
             Returns
             -------
             trend_logs : list
@@ -114,7 +118,7 @@ def app():
 
             window_start = st.date_input(
                 'Data window start', value=date(2000, 1, 1))
-        
+
             window_end = st.date_input(
                 'Data window end', value=current_date)
 
@@ -126,14 +130,14 @@ def app():
             if st.button(f'Pull Data'):
                 def round_datetime(dt, minutes=15):
                     """Takes in an inputted date and time and rounds it to the closest 15th minute
-                    
+
                     Parameters
                     ----------
                     dt
                         a datetime object to be rounded
                     minutes : optional
                         an int for the dt object to be compared to for rounding
-                        
+
                     Returns
                     -------
                         a datetime object rounded to the closest 15th minute
@@ -142,14 +146,14 @@ def app():
 
                 def request_column(trend_log_id: str, data_by_datetime: dict):
                     """Get the data from one trend log and append its value indexed by `trend_log_id` to the dictionary `data_by_datetime` by its timestamp.
-                    
+
                     Parameters
                     ----------
                     trend_log_id : str
                         a string containing the ID of the trend log to be extracted from the database
                     data_by_datetime : dict
                         a dictionary containing the timestamp
-                        
+
                     Returns
                     -------
                     int
@@ -204,13 +208,13 @@ def app():
                 for (data_reference, num_removed) in num_removed_by_reference.items():
                     st.metric(
                         label=f'Because {data_reference} was missing', value=num_removed)
-                
+
                 st.balloons()
 
                 @st.cache
                 def get_csv_string():
                     """Produces a CSV string consisting of all gathered data from database using specified, inputted values
-                    
+
                     Returns
                     -------
                     csv_string : str

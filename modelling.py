@@ -13,6 +13,11 @@ def app():
     """Produces a model from an uploaded CSV file that came from the API Extractor.
 
     If no CSV file is uploaded, the user can use an example dataset automatically provided in the dataset folder."""
+
+    st.caption("""
+            <hr>
+            """, unsafe_allow_html=True)
+
     st.title('Data Modelling')
 
     with st.expander("See Explanation"):
@@ -176,15 +181,23 @@ def app():
 
             st.header('Model Testing')
 
+            st.caption("""
+            The mean absolute error (MAE) takes the absolute difference between the actual and forecasted values and finds the average.
+            
+            Here we can see the MAE of each output and its delta with the total mean of all the outputs.
+            """)
             st.subheader('Mean Absolute Errors')
-
             st.metric(label='Mean of all outputs',
-                      value= "{}".format(total_mean_absolute_error))
+                      value="{}".format(total_mean_absolute_error))
 
             if len(output_column_names) > 1:
                 for i, column_name in enumerate(output_column_names):
                     st.metric(label=column_name,
                               value="{}".format(output_mean_absolute_errors[i]), delta=(output_mean_absolute_errors[i] - total_mean_absolute_error))
+
+            st.caption("""
+            <hr>
+            """, unsafe_allow_html=True)
 
             st.header('Prediction')
 
@@ -214,8 +227,7 @@ def app():
             for index, predicted_value in enumerate(prediction_outputs):
 
                 column_name = output_column_names[index]
-                col2.metric(label=column_name, value="{}".format(predicted_value))
+                col2.metric(label=column_name,
+                            value="{}".format(predicted_value))
 
             st.bar_chart(prediction_outputs)
-
-            st.balloons()
