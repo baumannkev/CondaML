@@ -25,8 +25,9 @@ def app():
             This modelling app allows the user to create a model that predicts the temperature of specified rooms from an uploaded CSV file and creates a visual representation of the predicted output using graphs
 
             The model creates a pipeline using ExtraTreesRegressor Machine Learning algorithm from the [sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html) library and returns it to be used for the modelling 
-        
+
         """)
+        st.video("images/modelling.webm")
     st.header('Data Selection')
 
     st.caption(

@@ -25,7 +25,7 @@ def app():
             This is the `API Extractor` of the BCIT HVAC Machine Learning app
             In this app, we can extract the data using the Kaizen API
         """)
-        st.image("https://static.streamlit.io/examples/dice.jpg")
+        st.video("images/apiextractor.webm")
 
     st.title('Kaizen Data Pulling')
     st.write('We protect the privacy of the BCIT buildings by using the `Kaizen Building IDs` provided to us')
