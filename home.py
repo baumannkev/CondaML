@@ -12,7 +12,7 @@ def app():
             <hr>
             """, unsafe_allow_html=True)
 
-    st.title('Home')
+    st.title('Home s')
     st.write('Welcome to the `BCIT HVAC Machine Learning app`')
     st.write(
         'To get started, click on the `Home` button on the navigation bar above, and navigate to our API Extractor.')
