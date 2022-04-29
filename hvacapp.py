@@ -14,7 +14,8 @@ import apiextract
 import modelling
 from PIL import Image
 
-st.set_page_config(page_title="BCIT HVAC", page_icon= Image.open('images/bcit.jpg'))
+st.set_page_config(page_title="BCIT HVAC APP",
+                   page_icon=Image.open('images/bcit.jpg'))
 
 app = MultiApp()
 
