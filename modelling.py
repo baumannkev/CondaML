@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+from sklearn.linear_model import SGDRegressor
+from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -101,6 +103,10 @@ def app():
             train_dataframe, test_dataframe = train_test_split(
                 dataframe, test_size=test_size, shuffle=False, random_state=2022_02_02)
 
+            model_type = st.selectbox(
+                'Model Type',
+                ('Extra-Trees', 'SGD'))
+
             if st.checkbox('Visualize data'):
                 st.header('All data')
                 st.info("Details of the data")
@@ -126,7 +132,7 @@ def app():
             train_input_values = train_dataframe[input_column_names].values
             train_output_values = train_dataframe[output_column_names].values
 
-            @st.cache(allow_output_mutation=True, show_spinner=False)
+            @st.cache(allow_output_mutation=True, show_spinner=False, max_entries=5)
             def get_pipeline():
                 """Creates a pipeline using ExtraTreesRegressor model and returns it to be used for the modelling.
 
@@ -134,9 +140,16 @@ def app():
                 -------
                 pipeline : Pipeline
                     a pipeline object made from ExtraTreesRegressor using values and inputs from app"""
+                print(model_type)
+                if model_type == 'Extra-Trees':
+                    regressor = ExtraTreesRegressor(
+                        n_estimators=100, random_state=0)
+                else:
+                    regressor = MultiOutputRegressor(
+                        SGDRegressor(max_iter=1_000_000, tol=1e-6))
                 pipeline = make_pipeline(
                     StandardScaler(),
-                    ExtraTreesRegressor(n_estimators=100, random_state=0)
+                    regressor
                 )
                 pipeline.fit(train_input_values,
                              train_output_values)
@@ -148,7 +161,7 @@ def app():
             st.success('Model is ready!')
 
             @st.cache(max_entries=100)
-            def get_model_mean_absolute_errors():
+            def get_model_mean_absolute_errors(model_type):
                 """Calculates and returns the total and output mean absolute errors of the model.
 
                 Returns
@@ -178,7 +191,8 @@ def app():
 
                 return (total_mean_absolute_error, output_mean_absolute_errors)
 
-            total_mean_absolute_error, output_mean_absolute_errors = get_model_mean_absolute_errors()
+            total_mean_absolute_error, output_mean_absolute_errors = get_model_mean_absolute_errors(
+                model_type)
 
             st.header('Model Testing')
 
