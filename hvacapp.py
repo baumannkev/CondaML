@@ -26,4 +26,8 @@ app.add_app("Home", home.app)
 app.add_app("API Extractor", apiextract.app)
 app.add_app("Modelling", modelling.app)
 # The main app
+st.markdown("""
+    ### [Contact Us](mailto:baumannkev@gmail.com)
+"""
+)
 app.run()
