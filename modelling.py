@@ -9,8 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-from sklearn.ensemble import GradientBoostingClassifier
+import xgboost as xgb
 
 def app():
     """Produces a model from an uploaded CSV file that came from the API Extractor.
@@ -106,7 +105,7 @@ def app():
 
             model_type = st.selectbox(
                 'Model Type',
-                 ('Extra-Trees', 'SGD', 'GBR'))
+                 ('Extra-Trees', 'SGD', 'GBR', 'XGB'))
             
             if model_type == 'Extra-Trees':
                 st.info("ExtraTreesRegressor - fits a number of randomized decision (extra) trees on various subsamples of the dataset and uses averaging to improve predictive accuracy and control over-fitting")
@@ -165,6 +164,9 @@ def app():
                 elif model_type == 'GBR':
                     regressor = MultiOutputRegressor(
                         GradientBoostingRegressor(n_estimators=100, random_state=0))
+                elif model_type == 'XGB':
+                    regressor = MultiOutputRegressor(
+                        xgb.XGBRegressor(n_estimators=100, random_state=0))
                 else:
                     regressor = MultiOutputRegressor(
                         SGDRegressor(max_iter=1_000_000, tol=1e-6))
