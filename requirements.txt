@@ -16,3 +16,4 @@ protobuf
 streamlit_disqus
 bokeh==2.4.1
 click==8
+xgboost==1.6.0

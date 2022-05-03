@@ -7,7 +7,7 @@ from streamlit_disqus import st_disqus
 def app():
     """Displays and prints the homepage of the app, including welcome tag, instructions, and information about app.
     """
-
+    
     st.caption("""
             <hr>
             """, unsafe_allow_html=True)
