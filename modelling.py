@@ -110,7 +110,11 @@ def app():
             if model_type == 'Extra-Trees':
                 st.info("ExtraTreesRegressor - fits a number of randomized decision (extra) trees on various subsamples of the dataset and uses averaging to improve predictive accuracy and control over-fitting")
             elif model_type == 'SGD':
-                st.info("Stochastic Gradient Descent: the gradient of the loss is estimated each sample at a time and the model is updated along the way with a decreasing strength schedule (learning rate)")
+                st.info("Stochastic Gradient Descent (SGD) - the gradient of the loss is estimated each sample at a time and the model is updated along the way with a decreasing strength schedule (learning rate)")
+            elif model_type == 'GBR':
+                st.info("GradientBoostinRegressor (GBR) - builds an additive model in a forward stage-wise fashion; it allows for the optimization of arbitrary differentiable loss functions. In each stage a regression tree is fit on the negative gradient of the given loss function.")
+            elif model_type == 'XGB':
+                st.info("XGBoost (XGB) - is an optimized distributed gradient boosting library designed to be highly efficient, flexible and portable. It implements machine learning algorithms under the Gradient Boosting framework. XGBoost provides a parallel tree boosting (also known as GBDT, GBM) that solve many data science problems in a fast and accurate way. ")
 
             if st.checkbox('Visualize data'):
                 st.header('All data')
@@ -153,6 +157,13 @@ def app():
                     - tol - the stopping criterion (set as 1e-6 or 0.000001)
                 - Source: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html
 
+                GradientBoostinRegressor - builds an additive model in a forward stage-wise fashion; it allows for the optimization of arbitrary differentiable loss functions. In each stage a regression tree is fit on the negative gradient of the given loss function.
+                - Source https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor
+
+                XGBoost is an optimized distributed gradient boosting library designed to be highly efficient, flexible and portable. It implements machine learning algorithms under the Gradient Boosting framework. XGBoost provides a parallel tree boosting (also known as GBDT, GBM) that solve many data science problems in a fast and accurate way. 
+                - Source https://github.com/dmlc/xgboost
+
+                
                 Returns
                 -------
                 pipeline : Pipeline
