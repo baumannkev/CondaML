@@ -15,9 +15,9 @@ def check_password():
 
     def password_entered():
         """Checks whether a password entered by the user is correct."""
-        if st.session_state["password"] == st.secrets["password"]:
+        if (st.session_state["password"] == st.secrets["password"]):
             st.session_state["password_correct"] = True
-            del st.session_state["password"]  # don't store password
+            # del st.session_state["password"]  # don't store password
         else:
             st.session_state["password_correct"] = False
 
@@ -32,7 +32,6 @@ def check_password():
         st.text_input(
             "Password", type="password", on_change=password_entered, key="password", help="Please [contact](mailto:baumannkev@gmail.com) us to gain access to our API Extractor. We hold sensitive data from BCIT that we have decided only to share with a select few."
         )
-        
         st.error("😕 Password incorrect. Hover over the ❔ for more help")
         
         return False
@@ -49,6 +48,7 @@ def app():
             """, unsafe_allow_html=True)
     # Check if password is correct
     if check_password():
+
 
         st.title('API Data Extractor')
 
