@@ -2,14 +2,14 @@ import streamlit as st
 import pandas as pd
 from sklearn.linear_model import SGDRegressor
 from sklearn.multioutput import MultiOutputRegressor
-from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.ensemble import ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from sklearn.ensemble import GradientBoostingClassifier
 
 def app():
     """Produces a model from an uploaded CSV file that came from the API Extractor.
@@ -105,7 +105,7 @@ def app():
 
             model_type = st.selectbox(
                 'Model Type',
-                ('Extra-Trees', 'SGD'))
+                ('Extra-Trees', 'SGD', 'XGB'))
 
             if st.checkbox('Visualize data'):
                 st.header('All data')
@@ -144,6 +144,9 @@ def app():
                 if model_type == 'Extra-Trees':
                     regressor = ExtraTreesRegressor(
                         n_estimators=100, random_state=0)
+                elif model_type == 'XGB':
+                    regressor = MultiOutputRegressor(
+                        GradientBoostingRegressor(n_estimators=100, random_state=0))
                 else:
                     regressor = MultiOutputRegressor(
                         SGDRegressor(max_iter=1_000_000, tol=1e-6))
