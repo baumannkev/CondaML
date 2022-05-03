@@ -134,12 +134,24 @@ def app():
 
             @st.cache(allow_output_mutation=True, show_spinner=False, max_entries=5)
             def get_pipeline():
-                """Creates a pipeline using ExtraTreesRegressor model and returns it to be used for the modelling.
+                """Creates a pipeline using the selected model and returns it to be used for the modelling. Models include ExtraTreesRegressor and SGDRegressor.
+
+                ExtraTreesRegressor - fits a number of randomized decision (extra) trees on various subsamples of the dataset and uses averaging to improve predictive accuracy and control over-fitting
+                - Current Parameters:
+                    - n_estimators - number of trees (set as 100)
+                    - random_state - controls three sources of randomness (set as 0)
+                - Source: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html
+
+                SGDRegressor - Stochastic Gradient Descent: the gradient of the loss is estimated each sample at a time and the model is updated along the way with a decreasing strength schedule (learning rate)
+                - Current Parameters:
+                    - max_iter - maximum number of iterations over the training data (epochs) (set as 1,000,000)
+                    - tol - the stopping criterion (set as 1e-6 or 0.000001)
+                - Source: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html
 
                 Returns
                 -------
                 pipeline : Pipeline
-                    a pipeline object made from ExtraTreesRegressor using values and inputs from app"""
+                    a pipeline object made from the selected model using values and inputs from app"""
                 print(model_type)
                 if model_type == 'Extra-Trees':
                     regressor = ExtraTreesRegressor(
