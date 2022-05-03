@@ -65,8 +65,8 @@ def app():
 
         # Append the items from the example dataset to the default inputs and outputs
         if user_example:
-            default_input_columns = all_column_names[1:-7]
-            default_output_columns = all_column_names[-7:-1]
+            default_input_columns = all_column_names[1:-3]
+            default_output_columns = all_column_names[-3:-1]
         else:
             default_input_columns = []
             default_output_columns = []
@@ -106,7 +106,12 @@ def app():
 
             model_type = st.selectbox(
                 'Model Type',
-                 ('Extra-Trees', 'SGD', 'XGB'))
+                 ('Extra-Trees', 'SGD', 'GBR'))
+            
+            if model_type == 'Extra-Trees':
+                st.info("ExtraTreesRegressor - fits a number of randomized decision (extra) trees on various subsamples of the dataset and uses averaging to improve predictive accuracy and control over-fitting")
+            elif model_type == 'SGD':
+                st.info("Stochastic Gradient Descent: the gradient of the loss is estimated each sample at a time and the model is updated along the way with a decreasing strength schedule (learning rate)")
 
             if st.checkbox('Visualize data'):
                 st.header('All data')
@@ -135,7 +140,7 @@ def app():
 
             @st.cache(allow_output_mutation=True, show_spinner=False, max_entries=5)
             def get_pipeline():
-                """Creates a pipeline using the selected model and returns it to be used for the modelling. Models include ExtraTreesRegressor and SGDRegressor.
+                """Creates a pipeline using the selected model and returns it to be used for the modelling. Models include ExtraTreesRegressor, SGDRegressor, and GradientBoostingRegressor.
 
                 ExtraTreesRegressor - fits a number of randomized decision (extra) trees on various subsamples of the dataset and uses averaging to improve predictive accuracy and control over-fitting
                 - Current Parameters:
@@ -157,7 +162,7 @@ def app():
                 if model_type == 'Extra-Trees':
                     regressor = ExtraTreesRegressor(
                         n_estimators=100, random_state=0)
-                elif model_type == 'XGB':
+                elif model_type == 'GBR':
                     regressor = MultiOutputRegressor(
                         GradientBoostingRegressor(n_estimators=100, random_state=0))
                 else:
