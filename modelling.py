@@ -64,8 +64,8 @@ def app():
 
         # Append the items from the example dataset to the default inputs and outputs
         if user_example:
-            default_input_columns = all_column_names[1:-3]
-            default_output_columns = all_column_names[-3:-1]
+            default_input_columns = all_column_names[1:-7]
+            default_output_columns = all_column_names[-7:-1]
         else:
             default_input_columns = []
             default_output_columns = []
@@ -163,7 +163,7 @@ def app():
                 XGBoost is an optimized distributed gradient boosting library designed to be highly efficient, flexible and portable. It implements machine learning algorithms under the Gradient Boosting framework. XGBoost provides a parallel tree boosting (also known as GBDT, GBM) that solve many data science problems in a fast and accurate way. 
                 - Source https://github.com/dmlc/xgboost
 
-                
+
                 Returns
                 -------
                 pipeline : Pipeline
