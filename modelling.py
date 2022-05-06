@@ -72,8 +72,18 @@ def app():
 
         st.caption(
             'Select which columns of the data will be inputs and which will be predicted outputs.')
+
+        # If the 'Use example dataset is unchecked, we give the option to select all the input columns.
+        if (user_example == False):
+             add_all_input_columns = st.checkbox("Add all inputs")
+             if add_all_input_columns:
+                 default_input_columns = all_column_names
         input_column_names = st.multiselect(
             'Inputs', all_column_names, default=default_input_columns)
+        if (user_example == False):
+             add_all_output_columns = st.checkbox("Add all outputs")
+             if add_all_output_columns:
+                 default_output_columns = all_column_names
         output_column_names = st.multiselect(
             'Outputs', all_column_names, default=default_output_columns)
 
