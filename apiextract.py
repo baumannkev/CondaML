@@ -6,7 +6,7 @@ If the user doesn't know what columns to extract, the script has default columns
 import streamlit as st
 import requests
 from datetime import datetime, date
-
+import pandas as pd
 # Check Input From User for Password
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -83,9 +83,27 @@ def app():
             return response.json()['access_token']
 
         jwt = get_jwt()
+        with st.expander("See Building IDs", expanded=True):
+            col1, col2 = st.columns(2)
 
-        building_id = st.text_input(
-            'Building ID', value=9871, help='The **building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.')
+            with col1:
+                st.header("Building ID")
+                st.subheader("9871")
+                st.subheader("9913")
+                st.subheader("9907")
+                st.subheader("9883")
+
+            with col2:
+                st.header("Building Name")
+                st.subheader("NE01")
+                st.subheader("SW01")
+                st.subheader("SE12")
+                st.subheader("SE06")
+
+        
+        # st.table(columns)
+        building_id = st.selectbox(
+            'Building ID', (9871, 9913, 9907, 9883), help='The **building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.')
 
         if building_id:
             @st.cache(ttl=259200, persist=True, max_entries=20)
@@ -111,31 +129,33 @@ def app():
                 return trend_logs
 
             trend_logs = get_all_trend_logs()
-
-            if st.checkbox('Use example columns'):
-                default_names = [
-                    'NE01_AHU7_RESET_POLL_TL',
-                    'NE01_AHU7_HCV_POLL_TL',
-                    'NE01_AHU7_HC_SWT_POLL_TL',
-                    'NE01_AHU7_HC_RWT_POLL_TL',
-                    'NE01_AHU7_MAD_FB_POLL_TL',
-                    'NE01_AHU7_HC_SAT_POLL_TL',
-                    'NE01_AHU7_MAT_POLL_TL',
-                    'NE01_AHU7_RAT_POLL_TL',
-                    'NE01_AHU7_SF_SPD_POLL_TL',
-                    'NE01_AHU7_EF_SPD_POLL_TL',
-                    'NE01_AHU5_OAT_GV_POLL_TL',
-                    'VAV4_1_RT_TL',
-                    'VAV4_2_RT_TL',
-                    'VAV4_3_RT_TL',
-                    'VAV4_4_RT_TL',
-                    'VAV4_5_RT_TL',
-                    'VAV4_6_RT_TL',
-                    'VAV4_7_RT_TL'
-                ]
-                default_selection = [
-                    x for x in trend_logs if x['name'] in default_names]
-                default_selection.sort(key=lambda x: x['name'])
+            if building_id == 9871:
+                if st.checkbox('Use example columns'):
+                    default_names = [
+                        'NE01_AHU7_RESET_POLL_TL',
+                        'NE01_AHU7_HCV_POLL_TL',
+                        'NE01_AHU7_HC_SWT_POLL_TL',
+                        'NE01_AHU7_HC_RWT_POLL_TL',
+                        'NE01_AHU7_MAD_FB_POLL_TL',
+                        'NE01_AHU7_HC_SAT_POLL_TL',
+                        'NE01_AHU7_MAT_POLL_TL',
+                        'NE01_AHU7_RAT_POLL_TL',
+                        'NE01_AHU7_SF_SPD_POLL_TL',
+                        'NE01_AHU7_EF_SPD_POLL_TL',
+                        'NE01_AHU5_OAT_GV_POLL_TL',
+                        'VAV4_1_RT_TL',
+                        'VAV4_2_RT_TL',
+                        'VAV4_3_RT_TL',
+                        'VAV4_4_RT_TL',
+                        'VAV4_5_RT_TL',
+                        'VAV4_6_RT_TL',
+                        'VAV4_7_RT_TL'
+                    ]
+                    default_selection = [
+                        x for x in trend_logs if x['name'] in default_names]
+                    default_selection.sort(key=lambda x: x['name'])
+                else:
+                    default_selection = []
             else:
                 default_selection = []
 
