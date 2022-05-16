@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import xgboost as xgb
 
+
+
 def app():
     """Produces a model from an uploaded CSV file that came from the API Extractor.
 
@@ -116,7 +118,18 @@ def app():
             model_type = st.selectbox(
                 'Model Type',
                  ('Extra-Trees', 'SGD', 'GBR', 'XGB'))
-            
+            parameter_n_estimators = 100
+            parameter_random_state = 0
+            parameter_max_iter = 1_000_000
+            parameter_tol = 1e-6
+            parameter_max_features = 1.0
+            parameter_min_samples_split = 2
+            parameter_min_samples_leaf = 1
+            parameter_criterion = "squared_error"
+            parameter_bootstrap = False
+            parameter_oob_score = False
+            parameter_n_jobs = 1
+
             if model_type == 'Extra-Trees':
                 st.info("ExtraTreesRegressor - fits a number of randomized decision (extra) trees on various subsamples of the dataset and uses averaging to improve predictive accuracy and control over-fitting")
             elif model_type == 'SGD':
@@ -126,6 +139,24 @@ def app():
             elif model_type == 'XGB':
                 st.info("XGBoost (XGB) - is an optimized distributed gradient boosting library designed to be highly efficient, flexible and portable. It implements machine learning algorithms under the Gradient Boosting framework. XGBoost provides a parallel tree boosting (also known as GBDT, GBM) that solve many data science problems in a fast and accurate way. ")
 
+            if st.checkbox('Modify Model Parameters', help="Check this box to open the Model parameters sidebar"):
+
+                st.sidebar.header(model_type)
+                with st.sidebar.subheader('1.0. Learning Parameters'):
+                    parameter_n_estimators = st.sidebar.slider('Number of estimators (n_estimators)', 0, 1000, 100, 100)
+                    if model_type == 'Extra-Trees':
+                        parameter_max_features = st.sidebar.select_slider('Max features (max_features)', options=['auto', 'sqrt', 'log2'])
+                        parameter_min_samples_split = st.sidebar.slider('Minimum number of samples required to split an internal node (min_samples_split)', 1, 10, 2, 1)
+                        parameter_min_samples_leaf = st.sidebar.slider('Minimum number of samples required to be at a leaf node (min_samples_leaf)', 1, 10, 2, 1)
+
+                with st.sidebar.subheader('2.0. General Parameters'):
+                    parameter_random_state = st.sidebar.slider('Seed number (random_state)', 0, 1000, 0, 1)
+                    if model_type == 'Extra-Trees':
+                        parameter_criterion = st.sidebar.selectbox('Performance measure (criterion)', options=['squared_error', 'absolute_error'])
+                        parameter_bootstrap = st.sidebar.selectbox('Bootstrap samples when building trees (bootstrap)', options=[False, True])
+                        parameter_oob_score = st.sidebar.select_slider('Whether to use out-of-bag samples to estimate the R^2 on unseen data (oob_score)', options=[False, True])
+                        parameter_n_jobs = st.sidebar.selectbox('Number of jobs to run in parallel (n_jobs)', options=[1, -1])
+                
             if st.checkbox('Visualize data'):
                 st.header('All data')
                 st.info("Details of the data")
@@ -178,19 +209,28 @@ def app():
                 -------
                 pipeline : Pipeline
                     a pipeline object made from the selected model using values and inputs from app"""
+                
                 print(model_type)
                 if model_type == 'Extra-Trees':
                     regressor = ExtraTreesRegressor(
-                        n_estimators=100, random_state=0)
+                        n_estimators=parameter_n_estimators,
+                        random_state=parameter_random_state,
+                        max_features=parameter_max_features,
+                        criterion=parameter_criterion,
+                        min_samples_split=parameter_min_samples_split,
+                        min_samples_leaf=parameter_min_samples_leaf,
+                        bootstrap=parameter_bootstrap,
+                        oob_score=parameter_oob_score,
+                        n_jobs=parameter_n_jobs)
                 elif model_type == 'GBR':
                     regressor = MultiOutputRegressor(
-                        GradientBoostingRegressor(n_estimators=100, random_state=0))
+                        GradientBoostingRegressor(n_estimators=parameter_n_estimators, random_state=parameter_random_state))
                 elif model_type == 'XGB':
                     regressor = MultiOutputRegressor(
-                        xgb.XGBRegressor(n_estimators=100, random_state=0))
+                        xgb.XGBRegressor(n_estimators=parameter_n_estimators, random_state=parameter_random_state))
                 else:
                     regressor = MultiOutputRegressor(
-                        SGDRegressor(max_iter=1_000_000, tol=1e-6))
+                        SGDRegressor(max_iter=parameter_max_iter, tol=parameter_tol))
                 pipeline = make_pipeline(
                     StandardScaler(),
                     regressor
@@ -240,7 +280,7 @@ def app():
 
             st.header('Model Testing')
 
-            st.caption("""
+            st.info("""
             The mean absolute error (MAE) takes the absolute difference between the actual and forecasted values and finds the average.
             
             Here we can see the MAE of each output and its delta with the total mean of all the outputs.
@@ -252,7 +292,7 @@ def app():
             if len(output_column_names) > 1:
                 for i, column_name in enumerate(output_column_names):
                     st.metric(label=column_name,
-                              value="{}".format(output_mean_absolute_errors[i]), delta=(output_mean_absolute_errors[i] - total_mean_absolute_error))
+                              value="{}".format(output_mean_absolute_errors[i]), delta=( total_mean_absolute_error - output_mean_absolute_errors[i]))
 
             st.caption("""
             <hr>
@@ -260,11 +300,11 @@ def app():
 
             st.header('Prediction')
 
-            with st.expander("See Explanation"):
-                st.write("""
-                    The predicted outputs shows the rooms, temperature and the delta.
-                    The values updates real-time when input sliders are modified.
-                """)
+            st.info("""
+                The predicted outputs shows the rooms, temperature and the delta.
+                
+                The values updates real-time when input sliders are modified.
+            """)
 
             col1, col2 = st.columns(2)
 
@@ -300,5 +340,3 @@ def app():
                 column_name = output_column_names[index]
                 col2.metric(label=column_name, value="{}".format(predicted_value), delta="{}".format(
                     predicted_value - st.session_state[str(index)]))
-
-            st.bar_chart(prediction_outputs)
