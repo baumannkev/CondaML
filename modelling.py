@@ -340,3 +340,5 @@ def app():
                 column_name = output_column_names[index]
                 col2.metric(label=column_name, value="{}".format(predicted_value), delta="{}".format(
                     predicted_value - st.session_state[str(index)]))
+
+            # st.bar_chart(prediction_outputs)
