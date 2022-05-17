@@ -118,10 +118,11 @@ def app():
             model_type = st.selectbox(
                 'Model Type',
                  ('Extra-Trees', 'SGD', 'GBR', 'XGB'))
+            # Global parameters 
             parameter_n_estimators = 100
             parameter_random_state = 0
-            parameter_max_iter = 1_000_000
-            parameter_tol = 1e-6
+
+            # Extra trees parameters
             parameter_max_features = 1.0
             parameter_min_samples_split = 2
             parameter_min_samples_leaf = 1
@@ -129,6 +130,11 @@ def app():
             parameter_bootstrap = False
             parameter_oob_score = False
             parameter_n_jobs = 1
+            
+            # SGD parameters
+            parameter_tol = 1e-3
+            parameter_max_iter = 1000
+            parameter_loss = 'squared_error'
 
             if model_type == 'Extra-Trees':
                 st.info("ExtraTreesRegressor - fits a number of randomized decision (extra) trees on various subsamples of the dataset and uses averaging to improve predictive accuracy and control over-fitting")
@@ -141,11 +147,11 @@ def app():
 
             if st.checkbox('Modify Model Parameters', help="Check this box to open the Model parameters sidebar"):
 
-                st.sidebar.header(model_type)
+                st.sidebar.markdown(model_type + " Model")
                 with st.sidebar.subheader('1.0. Learning Parameters'):
                     parameter_n_estimators = st.sidebar.slider('Number of estimators (n_estimators)', 0, 1000, 100, 100)
                     if model_type == 'Extra-Trees':
-                        parameter_max_features = st.sidebar.select_slider('Max features (max_features)', options=['auto', 'sqrt', 'log2'])
+                        parameter_max_features = st.sidebar.selectbox('Max features (max_features)', options=['auto', 'sqrt', 'log2'])
                         parameter_min_samples_split = st.sidebar.slider('Minimum number of samples required to split an internal node (min_samples_split)', 1, 10, 2, 1)
                         parameter_min_samples_leaf = st.sidebar.slider('Minimum number of samples required to be at a leaf node (min_samples_leaf)', 1, 10, 2, 1)
 
@@ -156,7 +162,16 @@ def app():
                         parameter_bootstrap = st.sidebar.selectbox('Bootstrap samples when building trees (bootstrap)', options=[False, True])
                         parameter_oob_score = st.sidebar.select_slider('Whether to use out-of-bag samples to estimate the R^2 on unseen data (oob_score)', options=[False, True])
                         parameter_n_jobs = st.sidebar.selectbox('Number of jobs to run in parallel (n_jobs)', options=[1, -1])
-                
+                    if model_type == 'SGD':
+                        # parameter_tol = st.sidebar.slider('Tol', 1e-3, 1e-0, 1e-6, 1e-10)
+                        parameter_max_iter = st.sidebar.slider('Max Iterations (max_iter)', 1000, 1_000_000, 1000, 100)
+                        parameter_loss = st.sidebar.selectbox('Loss function', options=['squared_error', "huber", "epsilon_insensitive"], help="The loss function to be used. The possible values are squared_error, huber, epsilon_insensitive or ‘squared_epsilon_insensitive.The squared_error refers to the ordinary least squares fit. huber modifies squared_error to focus less on getting outliers correct by switching from squared to linear loss past a distance of epsilon.‘epsilon_insensitive ignores errors less than epsilon and is linear past that; this is the loss function used in SVR. squared_epsilon_insensitive is the same but becomes squared loss past a tolerance of epsilon.")
+                    if model_type == 'GBR':
+                        parameter_max_features = st.sidebar.select_slider('Max features (max_features)', options=['auto', 'sqrt', 'log2'])
+                        parameter_min_samples_split = st.sidebar.slider('Minimum number of samples required to split an internal node (min_samples_split)', 1, 10, 2, 1)
+                        parameter_min_samples_leaf = st.sidebar.slider('Minimum number of samples required to be at a leaf node (min_samples_leaf)', 1, 10, 2, 1)
+                        parameter_loss = st.sidebar.selectbox('Loss function', options=['squared_error', "huber", "absolute_error", "quantile"], help="The loss function to be used. The possible values are squared_error, huber, epsilon_insensitive or ‘squared_epsilon_insensitive.The squared_error refers to the ordinary least squares fit. huber modifies squared_error to focus less on getting outliers correct by switching from squared to linear loss past a distance of epsilon.‘epsilon_insensitive ignores errors less than epsilon and is linear past that; this is the loss function used in SVR. squared_epsilon_insensitive is the same but becomes squared loss past a tolerance of epsilon.")
+            
             if st.checkbox('Visualize data'):
                 st.header('All data')
                 st.info("Details of the data")
@@ -224,13 +239,26 @@ def app():
                         n_jobs=parameter_n_jobs)
                 elif model_type == 'GBR':
                     regressor = MultiOutputRegressor(
-                        GradientBoostingRegressor(n_estimators=parameter_n_estimators, random_state=parameter_random_state))
+                        GradientBoostingRegressor(
+                            n_estimators=parameter_n_estimators,
+                            random_state=parameter_random_state,
+                            max_features=parameter_max_features,
+                            min_samples_split=parameter_min_samples_split,
+                            min_samples_leaf=parameter_min_samples_leaf,
+                            loss= parameter_loss))
                 elif model_type == 'XGB':
                     regressor = MultiOutputRegressor(
-                        xgb.XGBRegressor(n_estimators=parameter_n_estimators, random_state=parameter_random_state))
+                        xgb.XGBRegressor(
+                            n_estimators=parameter_n_estimators,
+                            random_state=parameter_random_state,
+                            ))
                 else:
                     regressor = MultiOutputRegressor(
-                        SGDRegressor(max_iter=parameter_max_iter, tol=parameter_tol))
+                        SGDRegressor(
+                            random_state=parameter_random_state,
+                            max_iter=parameter_max_iter,
+                            tol=parameter_tol,
+                            loss= parameter_loss))
                 pipeline = make_pipeline(
                     StandardScaler(),
                     regressor
