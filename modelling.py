@@ -160,7 +160,7 @@ def app():
                     if model_type == 'Extra-Trees':
                         parameter_criterion = st.sidebar.selectbox('Performance measure (criterion)', options=['squared_error', 'absolute_error'])
                         parameter_bootstrap = st.sidebar.selectbox('Bootstrap samples when building trees (bootstrap)', options=[False, True])
-                        parameter_oob_score = st.sidebar.select_slider('Whether to use out-of-bag samples to estimate the R^2 on unseen data (oob_score)', options=[False, True])
+                        parameter_oob_score = st.sidebar.selectbox('Whether to use out-of-bag samples to estimate the R^2 on unseen data (oob_score)', options=[False, True])
                         parameter_n_jobs = st.sidebar.selectbox('Number of jobs to run in parallel (n_jobs)', options=[1, -1])
                     if model_type == 'SGD':
                         # parameter_tol = st.sidebar.slider('Tol', 1e-3, 1e-0, 1e-6, 1e-10)
@@ -366,6 +366,7 @@ def app():
             for index, predicted_value in enumerate(prediction_outputs):
 
                 column_name = output_column_names[index]
+                # Delta is change compared to previous prediction output
                 col2.metric(label=column_name, value="{}".format(predicted_value), delta="{}".format(
                     predicted_value - st.session_state[str(index)]))
 

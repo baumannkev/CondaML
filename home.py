@@ -2,6 +2,7 @@ import streamlit as st
 import altair as alt
 import pandas as pd
 from streamlit_disqus import st_disqus
+import scipy
 
 
 def app():
