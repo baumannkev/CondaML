@@ -275,7 +275,7 @@ def app():
                  # Total time elapsed since the timer started
                 totalTime = round((time.time() - startTime), 2)
 
-            st.success('Model is ready! Time taken: ' + str(totalTime))
+            st.success('Model is ready! Time taken: ' + str(totalTime) + 's')
 
             @st.cache(max_entries=100)
             def get_model_mean_absolute_errors(model_type):
