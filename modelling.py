@@ -273,8 +273,8 @@ def app():
                 startTime = time.time()
                 pipeline = get_pipeline()
                  # Total time elapsed since the timer started
-                totalTime = round((time.time() - startTime), 2)
-
+                
+            totalTime = round((time.time() - startTime), 2)
             st.success('Model is ready! Time taken: ' + str(totalTime) + 's')
 
             @st.cache(max_entries=100)

@@ -85,20 +85,34 @@ def app():
             col1, col2 = st.columns(2)
 
             with col1:
-                st.header("Building ID")
-                st.subheader("9871")
-                st.subheader("9913")
-                st.subheader("9907")
-                st.subheader("9883")
-                st.subheader("9886")
+                st.markdown("""
+                    ### Building ID
+                """)
+                st.markdown("""
+                 #### 9871
+                """)
+                st.markdown("""
+                 #### 9913
+                """)
+                st.markdown("""
+                 #### 9907
+                  """)
+                st.markdown("""
+                  #### 9883
+                 """ )
+                st.markdown("""
+                  #### 9886
+                   """)
 
             with col2:
-                st.header("Building Name")
-                st.subheader("NE01")
-                st.subheader("SW01")
-                st.subheader("SE12")
-                st.subheader("SE06")
-                st.subheader("NE02")
+                st.markdown("""
+                   ### Building Name
+                """)
+                st.markdown("""#### NE01""")
+                st.markdown("""#### SW01""")
+                st.markdown("""#### SE12""")
+                st.markdown("""#### SE06""")
+                st.markdown("""#### NE02""")
 
         
         # st.table(columns)
