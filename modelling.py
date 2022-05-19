@@ -10,6 +10,7 @@ from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
 import seaborn as sns
 import xgboost as xgb
+import time
 
 
 
@@ -268,9 +269,13 @@ def app():
                 return pipeline
 
             with st.spinner('Fitting model...'):
+                # Timer starts
+                startTime = time.time()
                 pipeline = get_pipeline()
+                 # Total time elapsed since the timer started
+                totalTime = round((time.time() - startTime), 2)
 
-            st.success('Model is ready!')
+            st.success('Model is ready! Time taken: ' + str(totalTime))
 
             @st.cache(max_entries=100)
             def get_model_mean_absolute_errors(model_type):
