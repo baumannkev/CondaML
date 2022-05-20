@@ -85,39 +85,23 @@ def app():
             col1, col2 = st.columns(2)
 
             with col1:
-                st.markdown("""
-                    ### Building ID
-                """)
-                st.markdown("""
-                 #### 9871
-                """)
-                st.markdown("""
-                 #### 9913
-                """)
-                st.markdown("""
-                 #### 9907
-                  """)
-                st.markdown("""
-                  #### 9883
-                 """ )
-                st.markdown("""
-                  #### 9886
-                   """)
-
+                st.markdown("""### Building ID""")
+                st.markdown("""#### 9871""")
+                st.markdown("""#### 9913""")
+                st.markdown("""#### 9907""")
+                st.markdown("""#### 9883""")
+                st.markdown("""#### 9886""")
             with col2:
-                st.markdown("""
-                   ### Building Name
-                """)
+                st.markdown("""### Building Name""")
                 st.markdown("""#### NE01""")
                 st.markdown("""#### SW01""")
                 st.markdown("""#### SE12""")
                 st.markdown("""#### SE06""")
                 st.markdown("""#### NE02""")
-
         
         # st.table(columns)
         building_id = st.selectbox(
-            'Building ID', (9871, 9913, 9907, 9883, 9886), help='The **building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.')
+            'Building ID', (9871, 9913, 9907, 9883, 9886), help='The **Building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.')
 
         if building_id:
             @st.cache(ttl=259200, persist=True, max_entries=20)
