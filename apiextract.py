@@ -8,6 +8,15 @@ import requests
 from datetime import datetime, date
 import pandas as pd
 # Check Input From User for Password
+
+buildingDict = {
+    "NE01": 9871,
+    "SW01": 9913,
+    "SE12": 9907,
+    "SE06": 9883,
+    "NE02": 9886,
+}
+
 def check_password():
     """Returns `True` if the user had the correct password."""
 
@@ -100,8 +109,12 @@ def app():
                 st.markdown("""#### NE02""")
         
         # st.table(columns)
+        st.write(buildingDict["NE01"])
         building_id = st.selectbox(
-            'Building ID', (9871, 9913, 9907, 9883, 9886), help='The **Building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.')
+            
+            # 'Building ID', (9871, 9913, 9907, 9883, 9886), help='The **Building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.'
+            'Building ID', ("NE01", "SW01", "SE12", "SE06", "NE02"), help='The **Building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.'
+            )
 
         if building_id:
             @st.cache(ttl=259200, persist=True, max_entries=20)
@@ -112,7 +125,7 @@ def app():
                 trend_logs : list
                     a list containing all trend logs stored in database for variable building_id
                 """
-                url = f'https://kaizen.coppertreeanalytics.com/yana/mongo/trend_log_summary/?building={building_id}&page=1&page_size=500'
+                url = f'https://kaizen.coppertreeanalytics.com/yana/mongo/trend_log_summary/?building={buildingDict[building_id]}&page=1&page_size=500'
                 trend_logs = []
 
                 while url:
@@ -127,7 +140,8 @@ def app():
                 return trend_logs
 
             trend_logs = get_all_trend_logs()
-            if building_id == 9871:
+            # if building_id == 9871:
+            if building_id == "NE01":
                 if st.checkbox('Use example columns'):
                     default_names = [
                         'NE01_AHU7_RESET_POLL_TL',
