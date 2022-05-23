@@ -109,9 +109,7 @@ def app():
                 st.markdown("""#### NE02""")
         
         # st.table(columns)
-        st.write(buildingDict["NE01"])
         building_id = st.selectbox(
-            
             # 'Building ID', (9871, 9913, 9907, 9883, 9886), help='The **Building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.'
             'Building ID', ("NE01", "SW01", "SE12", "SE06", "NE02"), help='The **Building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.'
             )
