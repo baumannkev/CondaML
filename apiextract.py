@@ -7,7 +7,6 @@ import streamlit as st
 import requests
 from datetime import datetime, date
 import pandas as pd
-# Check Input From User for Password
 
 buildingDict = {
     "NE01": 9871,
@@ -16,8 +15,10 @@ buildingDict = {
     "SE06": 9883,
     "NE02": 9886,
 }
+""" Defines a dictionary (key:pair) for the buildings and their respective IDs from Kaizen """
 
 def check_password():
+    """ Check Input From User for Password """
     """Returns `True` if the user had the correct password."""
 
     def password_entered():
@@ -29,7 +30,7 @@ def check_password():
             st.session_state["password_correct"] = False
 
     if "password_correct" not in st.session_state:
-        # First run, show input for password.
+        """ First run, show input for password."""
         st.markdown("""
             ## Login
         """)
@@ -38,7 +39,7 @@ def check_password():
         )
         return False
     elif not st.session_state["password_correct"]:
-        # Password not correct, show input + error.
+        """ Password not correct, show input + error."""
         st.markdown("""
             ## Login
         """)
@@ -49,17 +50,15 @@ def check_password():
         
         return False
     else:
-        # Password correct.
+        """ Password correct. """
         return True
 
 def app():
-    """Extracts data from database and produces a CSV file from specified inputs
-    """
-
+    """Extracts data from database and produces a CSV file from specified inputs """
     st.caption("""
             <hr>
             """, unsafe_allow_html=True)
-    # Check if password is correct
+    """ Check if password is correct """
     if check_password():
         st.title('API Data Extractor')
 
@@ -108,12 +107,12 @@ def app():
                 st.markdown("""#### SE06""")
                 st.markdown("""#### NE02""")
         
-        # st.table(columns)
         building_id = st.selectbox(
             # 'Building ID', (9871, 9913, 9907, 9883, 9886), help='The **Building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.'
             'Building ID', ("NE01", "SW01", "SE12", "SE06", "NE02"), help='The **Building ID** is a numeric identifier of a building on Kaizen, which can be found at the end of the URL while viewing a building page.'
             )
 
+        """ If a building ID has been selected """
         if building_id:
             @st.cache(ttl=259200, persist=True, max_entries=20)
             def get_all_trend_logs():
@@ -139,6 +138,7 @@ def app():
 
             trend_logs = get_all_trend_logs()
             # if building_id == 9871:
+            """ We only want to use the example columns if NE01/9871 has been selected """
             if building_id == "NE01":
                 if st.checkbox('Use example columns'):
                     default_names = [
@@ -173,7 +173,7 @@ def app():
                                                 format_func=lambda x: x['name'], default=default_selection)
 
             if selected_trend_logs:
-                # current datetime
+                """ current datetime """
                 now = datetime.now()
 
                 current_date = now.date()
@@ -295,8 +295,3 @@ def app():
                         file_name='kaizen_data.csv',
                         mime='text/csv',
                     )
-                    # corrmat = dt.corr()
-                    # f, ax = plt.subplots(figsize=(12, 9))
-                    # sns.heatmap(corrmat, cbar=True, annot=True,
-                    #             square=True, fmt='.2f')
-                    # st.write(f)

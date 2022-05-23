@@ -119,11 +119,11 @@ def app():
             model_type = st.selectbox(
                 'Model Type',
                  ('Extra-Trees', 'SGD', 'GBR', 'XGB'))
-            # Global parameters 
+            """ Global parameters """ 
             parameter_n_estimators = 100
             parameter_random_state = 0
 
-            # Extra trees parameters
+            """ Extra trees parameters """
             parameter_max_features = 1.0
             parameter_min_samples_split = 2
             parameter_min_samples_leaf = 1
@@ -132,7 +132,7 @@ def app():
             parameter_oob_score = False
             parameter_n_jobs = 1
             
-            # SGD parameters
+            """ SGD parameters """
             parameter_tol = 1e-3
             parameter_max_iter = 1000
             parameter_loss = 'squared_error'
@@ -371,8 +371,7 @@ def app():
             for index, predicted_value in enumerate(prediction_outputs):
 
                 column_name = output_column_names[index]
-                # Delta is change compared to previous prediction output
+                """ Delta is change compared to previous prediction output """
                 col2.metric(label=column_name, value="{}".format(predicted_value), delta="{}".format(
                     predicted_value - st.session_state[str(index)]))
 
-            # st.bar_chart(prediction_outputs)
